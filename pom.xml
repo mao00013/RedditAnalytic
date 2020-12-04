@@ -60,6 +60,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>javax.persistence-api</artifactId>
+            <version>2.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
             <version>${junit.version}</version>
@@ -78,11 +83,11 @@
             <version>${jakarta.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>jakarta.persistence</groupId>
-            <artifactId>jakarta.persistence-api</artifactId>
-            <version>3.0.0</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jakarta.persistence</groupId>-->
+<!--            <artifactId>jakarta.persistence-api</artifactId>-->
+<!--            <version>3.0.0</version>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>jakarta.validation</groupId>
             <artifactId>jakarta.validation-api</artifactId>
@@ -140,11 +145,11 @@
             <version>${connectorj.version}</version>
         </dependency>
         
-        <dependency>
-            <groupId>net.dean.jraw</groupId>
-            <artifactId>JRAW</artifactId>
-            <version>${jraw.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>net.dean.jraw</groupId>-->
+<!--            <artifactId>JRAW</artifactId>-->
+<!--            <version>${jraw.version}</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 
