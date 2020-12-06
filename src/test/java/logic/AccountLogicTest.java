@@ -45,6 +45,8 @@ class AccountLogicTest {
     final void setUp() throws Exception {
 
         logic = LogicFactory.getFor( "Account" );
+        for(Account account : logic.getAll())
+            logic.delete(account);
         /* **********************************
          * ***********IMPORTANT**************
          * **********************************/

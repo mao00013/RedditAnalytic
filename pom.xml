@@ -159,9 +159,9 @@
                         <include>**/Test*.java</include>
                         <include>**/*Test.java</include>
                     </includes>
-                    <configuration>
-                        <testFailureIgnore>true</testFailureIgnore>
-                    </configuration>
+<!--                    <configuration>-->
+<!--                        <testFailureIgnore>true</testFailureIgnore>-->
+<!--                    </configuration>-->
                 </configuration>
             </plugin>
             <plugin>
