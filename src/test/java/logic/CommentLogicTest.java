@@ -7,9 +7,7 @@ import org.junit.jupiter.api.*;
 
 import javax.persistence.EntityManager;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -56,7 +54,7 @@ class CommentLogicTest {
         entity.setName("test");
         entity.setLinkPoints(1);
         entity.setCommentPoints(1);
-        entity.setCreated(new Date());
+        entity.setCreated(new Date(2020, 12, 3));
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
         em.getTransaction().begin();
@@ -81,7 +79,7 @@ class CommentLogicTest {
         post.setPoints(2);
         post.setCommentCount(2);
         post.setTitle("post_title");
-        post.setCreated(new Date());
+        post.setCreated(new Date(2020, 12, 1));
         post.setSubredditId(expectedSubreddit);
         post.setRedditAccountId(expectedRedditAccount);
         em = EMFactory.getEMF().createEntityManager();
@@ -92,7 +90,7 @@ class CommentLogicTest {
 
         // create Comment entity
         Comment comment = new Comment();
-        comment.setCreated(new Date());
+        comment.setCreated(new Date(2020, 12, 2));
         comment.setIsReply(true);
         comment.setPoints(9);
         comment.setPostId(expectedPost);
@@ -131,23 +129,81 @@ class CommentLogicTest {
     }
 
     @Test
-    void getColumnCodes() {
+    void testGetColumnCodes() {
+        List<String> list = commentLogic.getColumnCodes();
+        assertEquals(Arrays.asList(CommentLogic.ID, CommentLogic.TEXT, CommentLogic.CREATED, CommentLogic.POINTS, CommentLogic.REPLYS, CommentLogic.ISREPLY, CommentLogic.UNIQUEID, CommentLogic.POST_ID, CommentLogic.REDDIT_ACCOUNT_ID), list);
     }
 
     @Test
-    void extractDataAsList() {
+    void testExtractDataAsList() {
+        List<?> list = commentLogic.extractDataAsList( expectedComment );
+        assertEquals(expectedComment.getId(), list.get(0));
+        assertEquals(expectedComment.getText(), list.get(1));
+        assertEquals(expectedComment.getCreated(), list.get(2));
+        assertEquals(expectedComment.getPoints(), list.get(3));
+        assertEquals(expectedComment.getReplys(), list.get(4));
+        assertEquals(expectedComment.getIsReply(), list.get(5));
+        assertEquals(expectedComment.getUniqueId(), list.get(6));
+        assertEquals(expectedComment.getPostId().getId(), ((Post)list.get(7)).getId());
+        assertEquals(expectedComment.getRedditAccountId().getId(), ((RedditAccount) list.get(8)).getId());
     }
 
     @Test
-    void createEntity() {
+    void testCreateEntity() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(CommentLogic.ID, new String[] {Integer.toString(expectedComment.getId())});
+        sampleMap.put(CommentLogic.TEXT, new String[] {expectedComment.getText()});
+        sampleMap.put(CommentLogic.CREATED, new String[] {expectedComment.getCreated().toString()});
+        sampleMap.put(CommentLogic.POINTS, new String[] {Integer.toString(expectedComment.getPoints())});
+        sampleMap.put(CommentLogic.REPLYS, new String[] {Integer.toString(expectedComment.getReplys())});
+        sampleMap.put(CommentLogic.UNIQUEID, new String[] {expectedComment.getUniqueId()});
+        sampleMap.put(CommentLogic.POST_ID, new String[] {expectedComment.getPostId().getId().toString()});
+        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[] {expectedComment.getRedditAccountId().getId().toString()});
+        sampleMap.put(CommentLogic.ISREPLY, new String[] {expectedComment.getIsReply()?"1":"0"});
+
+        Comment returnedComment = commentLogic.createEntity(sampleMap);
+        assertCommentEquals(expectedComment, returnedComment);
+    }
+    /**
+     * helper method for testing all comment fields
+     *
+     * @param expected
+     * @param actual
+     */
+    private void assertCommentEquals( Comment expected, Comment actual ) {
+        //assert all field to guarantee they are the same
+        assertEquals( expected.getId(), actual.getId() );
+        assertEquals( expected.getText(), actual.getText() );
+        assertEquals( expected.getCreated().toString(), actual.getCreated().toString() );
+        assertEquals( expected.getPoints(), actual.getPoints() );
+        assertEquals( expected.getReplys(), actual.getReplys() );
+        assertEquals( expected.getUniqueId(), actual.getUniqueId() );
+        assertEquals( expected.getPostId().getId(), actual.getPostId().getId() );
+        assertEquals( expected.getRedditAccountId().getId(), actual.getRedditAccountId().getId() );
     }
 
     @Test
-    void getAll() {
+    void testGetAll() {
+        //get all the comments from the DB
+        List<Comment> list = commentLogic.getAll();
+        //store the size of list, this way we know how many comments exits in DB
+        int originalSize = list.size();
+        //make sure comment was created successfully
+        assertNotNull(expectedComment);
+        commentLogic.delete(expectedComment);
+        //get all comments again
+        list = commentLogic.getAll();
+        //the new size of comments must be one less
+        assertEquals(originalSize -1, list.size());
     }
 
     @Test
-    void getWithId() {
+    void testGetWithId() {
+        //using the id of test comment get another comment from logic
+        Comment returnedComment = commentLogic.getWithId( expectedComment.getId() );
+        //the two comment (testComment and returnedComment) must be the same
+        returnedComment.setCreated(new Date(returnedComment.getCreated().getTime()));
+        assertCommentEquals( expectedComment, returnedComment );
     }
 
     @Test
