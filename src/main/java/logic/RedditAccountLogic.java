@@ -90,20 +90,18 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
     }
 
     public RedditAccount getRedditAccountWithName(String name) {
-        return get(() -> getRedditAccountWithName(name));
+        return get(() -> dal().findByName(name));
     }
 
     public List<RedditAccount> getRedditAccountsWithLinkPoints(int linkPoints) {
-        return get(() -> getRedditAccountsWithLinkPoints(linkPoints));
+        return get(() -> dal().findByLinkPoints(linkPoints));
     }
 
     public List<RedditAccount> getRedditAccountsWithCommentPoints(int commentPoints) {
-        return get(() -> getRedditAccountsWithCommentPoints(commentPoints));
+        return get(() -> dal().findByCommentPoints(commentPoints));
     }
 
     public List<RedditAccount> getRedditAccountsWithCreated(Date created) {
-        return get(() -> getRedditAccountsWithCreated(created));
+        return get(() -> dal().findByCreated(created));
     }
-
-
 }

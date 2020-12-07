@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
 
-public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
+public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     public static final String SUBSCRIBERS = "subscribers";
     public static final String NAME = "name";
     public static final String URL = "url";
     public static final String ID = "id";
 
-    public SuberdditLogic() {
+    public SubredditLogic() {
         super(new SubredditDAL());
     }
 
@@ -30,12 +30,12 @@ public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     @Override
     public List<String> getColumnCodes() {
-        return Arrays.asList(ID, SUBSCRIBERS, NAME, URL);
+        return Arrays.asList(ID, NAME, URL, SUBSCRIBERS);
     }
 
     @Override
     public List<?> extractDataAsList(Subreddit subreddit) {
-        return Arrays.asList(subreddit.getId(), subreddit.getSubscribers(), subreddit.getName(), subreddit.getUrl());
+        return Arrays.asList(subreddit.getId(), subreddit.getName(),  subreddit.getUrl(), subreddit.getSubscribers());
     }
 
     @Override
@@ -92,16 +92,16 @@ public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
     }
 
     public Subreddit getSubredditWithName(String name) {
-        return get(() -> getSubredditWithName(name));
+        return get(() -> dal().fidByName(name));
     }
 
     public Subreddit getSubredditWithUrl(String url) {
-        return get(() -> getSubredditWithUrl(url));
+        return get(() ->  dal().findByUrl(url));
     }
 
     public List<Subreddit> getSubredditsWithSubscribers(int subscribers) {
 
-        return get(() -> getSubredditsWithSubscribers(subscribers));
+        return get(() ->  dal().findBySubscribers(subscribers));
     }
 
 }

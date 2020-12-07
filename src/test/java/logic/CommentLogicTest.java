@@ -19,7 +19,7 @@ class CommentLogicTest {
     private Post expectedPost;
     private PostLogic postLogic;
     private Subreddit expectedSubreddit;
-    private SuberdditLogic suberdditLogic;
+    private SubredditLogic subredditLogic;
 
     @BeforeAll
     final static void setUpBeforeClass() throws Exception {
@@ -36,7 +36,7 @@ class CommentLogicTest {
 
         commentLogic = LogicFactory.getFor( "Comment" );
         postLogic = LogicFactory.getFor("Post");
-        suberdditLogic = LogicFactory.getFor("Suberddit");
+        subredditLogic = LogicFactory.getFor("Subreddit");
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
 
         // clean up
@@ -44,8 +44,8 @@ class CommentLogicTest {
             commentLogic.delete(comment);
         for(Post post: postLogic.getAll())
             postLogic.delete(post);
-        for(Subreddit subreddit: suberdditLogic.getAll())
-            suberdditLogic.delete(subreddit);
+        for(Subreddit subreddit: subredditLogic.getAll())
+            subredditLogic.delete(subreddit);
         for(RedditAccount redditAccount: redditAccountLogic.getAll())
             redditAccountLogic.delete(redditAccount);
 
@@ -115,7 +115,7 @@ class CommentLogicTest {
             postLogic.delete(expectedPost);
         }
         if(expectedSubreddit != null) {
-            suberdditLogic.delete(expectedSubreddit);
+            subredditLogic.delete(expectedSubreddit);
         }
         if(expectedRedditAccount != null) {
             redditAccountLogic.delete(expectedRedditAccount);
@@ -174,7 +174,6 @@ class CommentLogicTest {
         //assert all field to guarantee they are the same
         assertEquals( expected.getId(), actual.getId() );
         assertEquals( expected.getText(), actual.getText() );
-
         assertEquals( expected.getCreated().toString(), actual.getCreated().toString() );
         assertEquals( expected.getPoints(), actual.getPoints() );
         assertEquals( expected.getReplys(), actual.getReplys() );

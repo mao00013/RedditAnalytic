@@ -25,7 +25,11 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
         return findResult("Subreddit.findById", map);
     }
 
-
+    public Subreddit fidByName(String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        return findResult("Subreddit.findByName", map);
+    }
     public Subreddit findByUrl(String url) {
         Map<String, Object> map = new HashMap<>();
         map.put("url", url);

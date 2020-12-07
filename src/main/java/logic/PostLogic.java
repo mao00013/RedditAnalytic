@@ -27,17 +27,17 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
 
     @Override
     public List<String> getColumnNames() {
-        return Arrays.asList("ID", "unique_id", "points", "comment_points", "title", "created", "subreddit_id", "reddit_account_id");
+        return Arrays.asList("ID", "title", "created", "points","subreddit_id", "unique_id", "comment_count", "reddit_account_id");
     }
 
     @Override
     public List<String> getColumnCodes() {
-        return Arrays.asList(ID, UNIQUE_ID, POINTS, COMMENT_COUNT, TITLE, CREATED, SUBREDDIT_ID, REDDIT_ACCOUNT_ID);
+        return Arrays.asList(ID, TITLE, CREATED, POINTS, SUBREDDIT_ID, UNIQUE_ID, COMMENT_COUNT, REDDIT_ACCOUNT_ID);
     }
 
     @Override
     public List<?> extractDataAsList(Post post) {
-        return Arrays.asList(post.getId(), post.getUniqueID(), post.getPoints(), post.getCommentCount(), post.getTitle(), post.getCreated(), post.getSubredditId(), post.getRedditAccountId());
+        return Arrays.asList(post.getId(), post.getTitle(), post.getCreated(), post.getPoints(),  post.getSubredditId(), post.getUniqueID(), post.getCommentCount(), post.getRedditAccountId());
     }
 
     @Override
@@ -104,28 +104,28 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     }
 
     public Post getPostWithUniqueId(String uniqueId) {
-        return get(() -> getPostWithUniqueId(uniqueId));
+        return get(() ->  dal().findByUniqueId(uniqueId));
     }
 
     public List<Post> getPostWithPoints(int points) {
-        return get(() -> getPostWithPoints(points));
+        return get(() ->  dal().findByPoints(points));
     }
 
     public List<Post> getPostsWithCommentCount(int commentCount) {
-        return get(() -> getPostsWithCommentCount(commentCount));
+        return get(() ->dal().findByCommentCount(commentCount));
     }
 
     public List<Post> getPostsWithAuthorID(int id) {
 
-        return get(() -> getPostsWithAuthorID(id));
+        return get(() -> dal().findByAuthor(id));
     }
 
     public List<Post> getPostsWithTitle(String title) {
 
-        return get(()->getPostsWithTitle(title));
+        return get(()->dal().findByTitle(title));
     }
 
     public List<Post> getPostsWithCreated(Date created) {
-        return get(()->getPostsWithCreated(created));
+        return get(()->dal().findByCreated(created));
     }
 }
