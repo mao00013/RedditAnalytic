@@ -174,6 +174,7 @@ class CommentLogicTest {
         //assert all field to guarantee they are the same
         assertEquals( expected.getId(), actual.getId() );
         assertEquals( expected.getText(), actual.getText() );
+
         assertEquals( expected.getCreated().toString(), actual.getCreated().toString() );
         assertEquals( expected.getPoints(), actual.getPoints() );
         assertEquals( expected.getReplys(), actual.getReplys() );
@@ -207,26 +208,60 @@ class CommentLogicTest {
     }
 
     @Test
-    void getCommentWithUniqueId() {
+    void testGetCommentWithUniqueId() {
+        Comment returnedComment = commentLogic.getCommentWithUniqueId(expectedComment.getUniqueId());
+        returnedComment.setCreated(new Date(returnedComment.getCreated().getTime()));
+        assertCommentEquals(expectedComment, returnedComment);
     }
 
     @Test
     void getCommentsWithText() {
+        List<Comment> returnedComments = commentLogic.getCommentsWithText(expectedComment.getText());
+        Comment comment = returnedComments.get(0);
+        comment.setCreated(new Date(comment.getCreated().getTime()));
+        if(comment.getId().equals(expectedComment.getId())){
+            assertCommentEquals(expectedComment, comment);
+        }
     }
 
+
     @Test
-    void getCommentsWithCreated() {
+    void testGetCommentsWithCreated() {
+        List<Comment> returnedComments = commentLogic.getCommentsWithCreated(expectedComment.getCreated());
+        Comment comment = returnedComments.get(0);
+        comment.setCreated(new Date(comment.getCreated().getTime()));
+        if(comment.getId().equals(expectedComment.getId())){
+            assertCommentEquals(expectedComment, comment);
+        }
     }
 
     @Test
     void getCommentsWithPoints() {
+        List<Comment> returnedComments = commentLogic.getCommentsWithPoints(expectedComment.getPoints());
+        Comment comment = returnedComments.get(0);
+        comment.setCreated(new Date(comment.getCreated().getTime()));
+        if(comment.getId().equals(expectedComment.getId())){
+            assertCommentEquals(expectedComment, comment);
+        }
     }
 
     @Test
     void getCommentsWithReplys() {
+        List<Comment> returnedComments = commentLogic.getCommentsWithReplys(expectedComment.getReplys());
+        Comment comment = returnedComments.get(0);
+        comment.setCreated(new Date(comment.getCreated().getTime()));
+        if(comment.getId().equals(expectedComment.getId())){
+            assertCommentEquals(expectedComment, comment);
+        }
     }
 
     @Test
     void getCommentsWithIsReply() {
+        List<Comment> returnedComments = commentLogic.getCommentsWithIsReply(expectedComment.getIsReply());
+        Comment comment = returnedComments.get(0);
+        comment.setCreated(new Date(comment.getCreated().getTime()));
+        if(comment.getId().equals(expectedComment.getId())){
+            assertCommentEquals(expectedComment, comment);
+        }
     }
 }

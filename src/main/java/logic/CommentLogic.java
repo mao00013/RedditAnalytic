@@ -112,26 +112,26 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
     }
 
     public Comment getCommentWithUniqueId(String uniqueId) {
-        return get(() -> getCommentWithUniqueId(uniqueId));
+        return get(() -> dal().findByUniqueId(uniqueId));
     }
 
     public List<Comment> getCommentsWithText(String text) {
-        return get(() -> getCommentsWithText(text));
+        return get(() -> dal().findByText(text));
     }
 
     public List<Comment> getCommentsWithCreated(Date created) {
-        return get(() -> getCommentsWithCreated(created));
+        return get(() -> dal().findByCreated(created));
     }
 
     public List<Comment> getCommentsWithPoints(int points) {
-        return get(() -> getCommentsWithPoints(points));
+        return get(() -> dal().findByPoints(points));
     }
 
     public List<Comment> getCommentsWithReplys(int replys) {
-        return get(() -> getCommentsWithReplys(replys));
+        return get(() -> dal().findByReplys(replys));
     }
 
     public List<Comment> getCommentsWithIsReply(boolean isReply) {
-        return get(() -> getCommentsWithIsReply(isReply));
+        return get(() -> dal().findByIsReply(isReply));
     }
 }
