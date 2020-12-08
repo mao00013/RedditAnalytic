@@ -1,6 +1,7 @@
 package logic;
 
 import common.TomcatStartUp;
+import common.ValidationException;
 import dal.EMFactory;
 import entity.*;
 import org.junit.jupiter.api.*;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.*;
 import javax.persistence.EntityManager;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -164,8 +167,199 @@ class CommentLogicTest {
         Comment returnedComment = commentLogic.createEntity(sampleMap);
         assertCommentEquals(expectedComment, returnedComment);
     }
+
+    @Test
+    final void testCreateEntityAndAdd() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(CommentLogic.TEXT, new String[]{"Test Create Entity"});
+        sampleMap.put(CommentLogic.POINTS, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.ISREPLY, new String[]{"1"});
+        sampleMap.put(CommentLogic.CREATED, new String[]{"2020-12-03"});
+        sampleMap.put(CommentLogic.REPLYS, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.UNIQUEID, new String[]{"uid"});
+        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[] {expectedComment.getRedditAccountId().getId().toString()});
+        sampleMap.put(CommentLogic.POST_ID, new String[] {expectedComment.getPostId().getId().toString()});
+        sampleMap.put(CommentLogic.CREATED, new String[] {expectedComment.getCreated().toString()});
+        Comment returnedCommet = commentLogic.createEntity(sampleMap);
+        commentLogic.add(returnedCommet);
+        returnedCommet = commentLogic.getCommentWithUniqueId(returnedCommet.getUniqueId());
+        returnedCommet.setCreated(new Date(returnedCommet.getCreated().getTime()));
+        assertEquals(sampleMap.get(CommentLogic.UNIQUEID)[0], returnedCommet.getUniqueId());
+
+        commentLogic.delete(returnedCommet);
+    }
+
+    @Test
+    final void testCreateEntityNullAndEmptyValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map ) -> {
+            map.clear();
+            map.put( CommentLogic.ID, new String[]{ Integer.toString( expectedComment.getId() ) } );
+            map.put( CommentLogic.TEXT, new String[]{expectedComment.getText() } );
+            map.put(CommentLogic.POINTS, new String[]{Integer.toString(expectedComment.getPoints())} );
+            map.put(CommentLogic.UNIQUEID, new String[]{expectedComment.getUniqueId()});
+            map.put(CommentLogic.ISREPLY, new String[]{expectedComment.getIsReply()? "1" : "0"});
+            map.put(CommentLogic.CREATED, new String[]{expectedComment.getCreated().toString()});
+            map.put(CommentLogic.REPLYS, new String[]{Integer.toString(expectedComment.getReplys())});
+            map.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
+            map.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.ID, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.ID, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.TEXT, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.TEXT, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.CREATED, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.CREATED, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.POST_ID, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.POST_ID, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.POINTS, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.POINTS, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.REPLYS, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.REPLYS, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.UNIQUEID, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.REDDIT_ACCOUNT_ID, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.ISREPLY, null);
+        assertThrows(NullPointerException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.ISREPLY, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> commentLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityBadLengthValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map ) -> {
+            map.clear();
+            map.put( CommentLogic.ID, new String[]{ Integer.toString( expectedComment.getId() ) } );
+            map.put( CommentLogic.TEXT, new String[]{expectedComment.getText() } );
+            map.put(CommentLogic.POINTS, new String[]{Integer.toString(expectedComment.getPoints())} );
+            map.put(CommentLogic.UNIQUEID, new String[]{expectedComment.getUniqueId()});
+            map.put(CommentLogic.ISREPLY, new String[]{expectedComment.getIsReply()? "1" : "0"});
+            map.put(CommentLogic.CREATED, new String[]{expectedComment.getCreated().toString()});
+            map.put(CommentLogic.REPLYS, new String[]{Integer.toString(expectedComment.getReplys())});
+            map.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
+            map.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
+        };
+
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            //from 97 inclusive to 123 exclusive
+            return new Random().ints( 'a', 'z' + 1 ).limit( length )
+                    .collect( StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append )
+                    .toString();
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.ID, new String[] {""});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.ID, new String[]{"88a"});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.TEXT, new String[]{""});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.TEXT, new String[]{generateString.apply(10001)});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{""});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{generateString.apply(11)});
+        assertThrows(ValidationException.class, () -> commentLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityEdgeValues() {
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            return new Random().ints('a', 'z' + 1).limit(length)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        };
+
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(CommentLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.TEXT, new String[]{generateString.apply(1)});
+        sampleMap.put(CommentLogic.ISREPLY, new String[]{"1"});
+        sampleMap.put(CommentLogic.POINTS, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.UNIQUEID, new String[]{generateString.apply(1)});
+        sampleMap.put(CommentLogic.REPLYS, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
+        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
+        sampleMap.put(CommentLogic.CREATED, new String[]{(expectedComment.getCreated().toString())});
+        //idealy every test should be in its own method
+        Comment returnedComment = commentLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.ID)[0]), returnedComment.getId());
+        assertEquals(sampleMap.get(CommentLogic.TEXT)[0], returnedComment.getText());
+        assertEquals(sampleMap.get(CommentLogic.CREATED)[0], returnedComment.getCreated().toString());
+        assertEquals(sampleMap.get(CommentLogic.POST_ID)[0], returnedComment.getPostId().getId().toString());
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.POINTS)[0]), returnedComment.getPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.REPLYS)[0]), returnedComment.getReplys());
+        assertEquals(sampleMap.get(CommentLogic.ISREPLY)[0], returnedComment.getIsReply()? "0":"1");
+        assertEquals(sampleMap.get(CommentLogic.UNIQUEID)[0], returnedComment.getUniqueId());
+        assertEquals(sampleMap.get(CommentLogic.REDDIT_ACCOUNT_ID)[0], returnedComment.getRedditAccountId().getId().toString());
+
+        sampleMap = new HashMap<>();
+        sampleMap.put(CommentLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.TEXT, new String[]{generateString.apply(10000)});
+        sampleMap.put(CommentLogic.UNIQUEID, new String[]{generateString.apply(10)});
+        sampleMap.put(CommentLogic.ISREPLY, new String[]{"1"});
+        sampleMap.put(CommentLogic.REPLYS, new String[]{Integer.toString(1)});
+        sampleMap.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
+        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
+        sampleMap.put(CommentLogic.CREATED, new String[]{(expectedComment.getCreated().toString())});
+        sampleMap.put(CommentLogic.POINTS, new String[]{Integer.toString(1)});
+
+        returnedComment = commentLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.ID)[0]), returnedComment.getId());
+        assertEquals(sampleMap.get(CommentLogic.TEXT)[0], returnedComment.getText());
+        assertEquals(sampleMap.get(CommentLogic.CREATED)[0], returnedComment.getCreated().toString());
+        assertEquals(sampleMap.get(CommentLogic.POST_ID)[0], returnedComment.getPostId().getId().toString());
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.POINTS)[0]), returnedComment.getPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(CommentLogic.REPLYS)[0]), returnedComment.getReplys());
+        assertEquals(sampleMap.get(CommentLogic.ISREPLY)[0], returnedComment.getIsReply()? "0":"1");
+        assertEquals(sampleMap.get(CommentLogic.UNIQUEID)[0], returnedComment.getUniqueId());
+        assertEquals(sampleMap.get(CommentLogic.REDDIT_ACCOUNT_ID)[0], returnedComment.getRedditAccountId().getId().toString());
+    }
+
+
     /**
-     * helper method for testing all comment fields
+     * helper method for testing all account fields
      *
      * @param expected
      * @param actual
@@ -199,9 +393,7 @@ class CommentLogicTest {
 
     @Test
     void testGetWithId() {
-        //using the id of test comment get another comment from logic
         Comment returnedComment = commentLogic.getWithId( expectedComment.getId() );
-        //the two comment (testComment and returnedComment) must be the same
         returnedComment.setCreated(new Date(returnedComment.getCreated().getTime()));
         assertCommentEquals( expectedComment, returnedComment );
     }
@@ -214,7 +406,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void getCommentsWithText() {
+    void testGetCommentsWithText() {
         List<Comment> returnedComments = commentLogic.getCommentsWithText(expectedComment.getText());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -235,7 +427,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void getCommentsWithPoints() {
+    void testGetCommentsWithPoints() {
         List<Comment> returnedComments = commentLogic.getCommentsWithPoints(expectedComment.getPoints());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -245,7 +437,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void getCommentsWithReplys() {
+    void testGetCommentsWithReplys() {
         List<Comment> returnedComments = commentLogic.getCommentsWithReplys(expectedComment.getReplys());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -255,7 +447,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void getCommentsWithIsReply() {
+    void testGetCommentsWithIsReply() {
         List<Comment> returnedComments = commentLogic.getCommentsWithIsReply(expectedComment.getIsReply());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));

@@ -2,6 +2,7 @@ package logic;
 
 import common.TomcatStartUp;
 import dal.EMFactory;
+import entity.Comment;
 import entity.Subreddit;
 import org.junit.jupiter.api.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class SubredditLogicTest {
     private SubredditLogic subredditLogic;
@@ -72,33 +74,56 @@ class SubredditLogicTest {
     }
 
     @Test
-    void createEntity() {
+    void testCreateEntity() {
         Map<String, String[]> sampleMap = new HashMap<>();
         sampleMap.put(SubredditLogic.ID, new String[] {Integer.toString(expectedSubreddit.getId())});
         sampleMap.put(SubredditLogic.NAME, new String[]{expectedSubreddit.getName()});
         sampleMap.put(SubredditLogic.URL, new String[]{expectedSubreddit.getUrl()});
         sampleMap.put(SubredditLogic.SUBSCRIBERS, new String[]{Integer.toString(expectedSubreddit.getSubscribers())});
-        Subreddit returnedPost = subredditLogic.createEntity(sampleMap);
-        
+        Subreddit returnedSubreddit = subredditLogic.createEntity(sampleMap);
+        assertSubredditEquals(expectedSubreddit, returnedSubreddit);
+    }
+    private void assertSubredditEquals(Subreddit expected, Subreddit actual ) {
+        //assert all field to guarantee they are the same
+        assertEquals( expected.getId(), actual.getId() );
+        assertEquals( expected.getName(), actual.getName() );
+        assertEquals( expected.getUrl(), actual.getUrl());
+        assertEquals( expected.getSubscribers(), actual.getSubscribers() );
+    }
+    @Test
+    void testGetAll() {
+        List<Subreddit> list = subredditLogic.getAll();
+        int originalSize = list.size();
+        assertNotNull(expectedSubreddit);
+        subredditLogic.delete(expectedSubreddit);
+        list = subredditLogic.getAll();
+        assertEquals(originalSize -1, list.size());
     }
 
     @Test
-    void getAll() {
+    void testGetWithId() {
+        Subreddit returnedSubreddit = subredditLogic.getWithId(expectedSubreddit.getId());
+        assertSubredditEquals(expectedSubreddit, returnedSubreddit);
     }
 
     @Test
-    void getWithId() {
+    void testGetSubredditWithName() {
+        Subreddit returnedSubreddit = subredditLogic.getSubredditWithName(expectedSubreddit.getName());
+        assertSubredditEquals(expectedSubreddit, returnedSubreddit);
     }
 
     @Test
-    void getSubredditWithName() {
-    }
-
-    @Test
-    void getSubredditWithUrl() {
+    void testGetSubredditWithUrl() {
+        Subreddit returnedSubreddit = subredditLogic.getSubredditWithUrl(expectedSubreddit.getUrl());
+        assertSubredditEquals(expectedSubreddit, returnedSubreddit);
     }
 
     @Test
     void getSubredditsWithSubscribers() {
+        List<Subreddit> returnedSubreddit = subredditLogic.getSubredditsWithSubscribers(expectedSubreddit.getSubscribers());
+        Subreddit subreddit = returnedSubreddit.get(0);
+       if(subreddit.getId().equals(expectedSubreddit.getId())) {
+           assertSubredditEquals(expectedSubreddit, subreddit);
+       }
     }
 }
