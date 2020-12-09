@@ -34,7 +34,7 @@ class PostLogicTest {
     }
 
     @BeforeEach
-    void setUp() {
+    final void setUp() {
         postLogic = LogicFactory.getFor("Post");
         subredditLogic = LogicFactory.getFor("Subreddit");
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
@@ -86,7 +86,7 @@ class PostLogicTest {
     }
 
     @AfterEach
-    void tearDown() {
+    final void tearDown() {
         if(expectedPost != null) {
             postLogic.delete(expectedPost);
         }
@@ -99,19 +99,19 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetColumnNames() {
+    final void testGetColumnNames() {
         List<String> stringList = postLogic.getColumnNames();
         assertEquals( Arrays.asList("ID", "title", "created", "points","subreddit_id", "unique_id", "comment_count", "reddit_account_id"), stringList );
     }
 
     @Test
-    void testGetColumnCodes() {
+    final void testGetColumnCodes() {
         List<String> list = postLogic.getColumnCodes();
         assertEquals(Arrays.asList(PostLogic.ID, PostLogic.TITLE, PostLogic.CREATED, PostLogic.POINTS, PostLogic.SUBREDDIT_ID, PostLogic.UNIQUE_ID, PostLogic.COMMENT_COUNT, PostLogic.REDDIT_ACCOUNT_ID), list);
     }
 
     @Test
-    void testExtractDataAsList() {
+    final void testExtractDataAsList() {
         List<?> list = postLogic.extractDataAsList( expectedPost);
         assertEquals(expectedPost.getId(), list.get(0));
         assertEquals(expectedPost.getTitle(), list.get(1));
@@ -124,7 +124,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testCreateEntity() {
+    final void testCreateEntity() {
         Map<String, String[]> sampleMap = new HashMap<>();
         sampleMap.put(PostLogic.ID, new String[] {Integer.toString(expectedPost.getId())});
         sampleMap.put(PostLogic.TITLE, new String[] {expectedPost.getTitle()});
@@ -230,8 +230,8 @@ class PostLogicTest {
             map.put(PostLogic.TITLE, new String[]{expectedPost.getTitle()});
             map.put(PostLogic.CREATED, new String[]{expectedPost.getCreated().toString()});
             map.put(PostLogic.POINTS, new String[]{Integer.toString(expectedPost.getPoints())});
-            map.put(postLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
-            map.put(postLogic.UNIQUE_ID, new String[]{expectedPost.getUniqueID()});
+            map.put(PostLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
+            map.put(PostLogic.UNIQUE_ID, new String[]{expectedPost.getUniqueID()});
             map.put(PostLogic.COMMENT_COUNT, new String[]{Integer.toString(expectedPost.getCommentCount())});
             map.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{expectedPost.getRedditAccountId().getId().toString()});
         };
@@ -257,9 +257,9 @@ class PostLogicTest {
         assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
 
         fillMap.accept(sampleMap);
-        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{""});
+        sampleMap.replace(PostLogic.UNIQUE_ID, new String[]{""});
         assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
-        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{generateString.apply(11)});
+        sampleMap.replace(PostLogic.UNIQUE_ID, new String[]{generateString.apply(11)});
         assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
     }
 
@@ -287,8 +287,8 @@ class PostLogicTest {
         assertEquals(sampleMap.get(PostLogic.TITLE)[0], returnedPost.getTitle());
         assertEquals(sampleMap.get(PostLogic.CREATED)[0], returnedPost.getCreated().toString());
         assertEquals(sampleMap.get(PostLogic.REDDIT_ACCOUNT_ID)[0], returnedPost.getRedditAccountId().getId().toString());
-        assertEquals(sampleMap.get(PostLogic.COMMENT_COUNT)[0], returnedPost.getCommentCount());
-        assertEquals(sampleMap.get(PostLogic.POINTS)[0], returnedPost.getPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.COMMENT_COUNT)[0]), returnedPost.getCommentCount());
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.POINTS)[0]), returnedPost.getPoints());
         assertEquals(sampleMap.get(PostLogic.UNIQUE_ID)[0], returnedPost.getUniqueID());
         assertEquals(sampleMap.get(PostLogic.SUBREDDIT_ID)[0], returnedPost.getSubredditId().getId().toString());
 
@@ -308,7 +308,7 @@ class PostLogicTest {
         assertEquals(sampleMap.get(PostLogic.CREATED) [0], returnedPost.getCreated().toString());
         assertEquals(sampleMap.get(PostLogic.UNIQUE_ID )[0], returnedPost.getUniqueID());
         assertEquals(Integer.parseInt(sampleMap.get(PostLogic.COMMENT_COUNT) [0]), returnedPost.getCommentCount());
-        assertEquals(sampleMap.get(PostLogic.POINTS) [0], returnedPost.getPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.POINTS) [0]), returnedPost.getPoints());
         assertEquals(sampleMap.get(PostLogic.REDDIT_ACCOUNT_ID) [0], returnedPost.getRedditAccountId().getId().toString());
         assertEquals(sampleMap.get(PostLogic.SUBREDDIT_ID) [0], returnedPost.getSubredditId().getId().toString());
     }
@@ -333,7 +333,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetAll() {
+    final void testGetAll() {
         List<Post> list = postLogic.getAll();
         int originalSize = list.size();
         assertNotNull(expectedPost);
@@ -343,21 +343,21 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetWithId() {
+    final void testGetWithId() {
         Post returnedPost = postLogic.getWithId(expectedPost.getId());
         returnedPost.setCreated(new Date(returnedPost.getCreated().getTime()));
         assertPostEquals(expectedPost, returnedPost);
     }
 
     @Test
-    void testGetPostWithUniqueId() {
+    final void testGetPostWithUniqueId() {
         Post returnedPost = postLogic.getPostWithUniqueId(expectedPost.getUniqueID());
         returnedPost.setCreated(new Date(returnedPost.getCreated().getTime()));
         assertPostEquals(expectedPost, returnedPost);
     }
 
     @Test
-    void testGetPostWithPoints() {
+    final void testGetPostWithPoints() {
         List<Post> returnedPost = postLogic.getPostWithPoints(expectedPost.getPoints());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));
@@ -367,7 +367,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetPostsWithCommentCount() {
+    final void testGetPostsWithCommentCount() {
         List<Post> returnedPost = postLogic.getPostsWithCommentCount(expectedPost.getCommentCount());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));
@@ -377,7 +377,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetPostsWithAuthorID() {
+    final void testGetPostsWithAuthorID() {
         List<Post> returnedPost = postLogic.getPostsWithAuthorID(expectedPost.getRedditAccountId().getId());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));
@@ -387,7 +387,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetPostsWithTitle() {
+    final void testGetPostsWithTitle() {
         List<Post> returnedPost = postLogic.getPostsWithTitle(expectedPost.getTitle());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));
@@ -397,7 +397,7 @@ class PostLogicTest {
     }
 
     @Test
-    void testGetPostsWithCreated() {
+    final void testGetPostsWithCreated() {
         List<Post> returnedPost = postLogic.getPostsWithCreated(expectedPost.getCreated());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));

@@ -35,7 +35,7 @@ class CommentLogicTest {
     }
 
     @BeforeEach
-    void setUp() {
+    final void setUp() {
 
         commentLogic = LogicFactory.getFor( "Comment" );
         postLogic = LogicFactory.getFor("Post");
@@ -110,7 +110,7 @@ class CommentLogicTest {
     }
 
     @AfterEach
-    void tearDown() {
+    final void tearDown() {
         if( expectedComment != null ){
             commentLogic.delete( expectedComment );
         }
@@ -126,19 +126,19 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetColumnNames() {
+    final void testGetColumnNames() {
         List<String> stringList = commentLogic.getColumnNames();
         assertEquals( Arrays.asList("ID", "text", "created", "points", "replys", "is_reply", "unique_id", "post_id", "reddit_account_id"), stringList );
     }
 
     @Test
-    void testGetColumnCodes() {
+    final void testGetColumnCodes() {
         List<String> list = commentLogic.getColumnCodes();
         assertEquals(Arrays.asList(CommentLogic.ID, CommentLogic.TEXT, CommentLogic.CREATED, CommentLogic.POINTS, CommentLogic.REPLYS, CommentLogic.ISREPLY, CommentLogic.UNIQUEID, CommentLogic.POST_ID, CommentLogic.REDDIT_ACCOUNT_ID), list);
     }
 
     @Test
-    void testExtractDataAsList() {
+    final void testExtractDataAsList() {
         List<?> list = commentLogic.extractDataAsList( expectedComment );
         assertEquals(expectedComment.getId(), list.get(0));
         assertEquals(expectedComment.getText(), list.get(1));
@@ -152,7 +152,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void testCreateEntity() {
+    final void testCreateEntity() {
         Map<String, String[]> sampleMap = new HashMap<>();
         sampleMap.put(CommentLogic.ID, new String[] {Integer.toString(expectedComment.getId())});
         sampleMap.put(CommentLogic.TEXT, new String[] {expectedComment.getText()});
@@ -376,7 +376,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetAll() {
+    final void testGetAll() {
         //get all the comments from the DB
         List<Comment> list = commentLogic.getAll();
         //store the size of list, this way we know how many comments exits in DB
@@ -391,21 +391,21 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetWithId() {
+    final void testGetWithId() {
         Comment returnedComment = commentLogic.getWithId( expectedComment.getId() );
         returnedComment.setCreated(new Date(returnedComment.getCreated().getTime()));
         assertCommentEquals( expectedComment, returnedComment );
     }
 
     @Test
-    void testGetCommentWithUniqueId() {
+    final void testGetCommentWithUniqueId() {
         Comment returnedComment = commentLogic.getCommentWithUniqueId(expectedComment.getUniqueId());
         returnedComment.setCreated(new Date(returnedComment.getCreated().getTime()));
         assertCommentEquals(expectedComment, returnedComment);
     }
 
     @Test
-    void testGetCommentsWithText() {
+    final void testGetCommentsWithText() {
         List<Comment> returnedComments = commentLogic.getCommentsWithText(expectedComment.getText());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -416,7 +416,7 @@ class CommentLogicTest {
 
 
     @Test
-    void testGetCommentsWithCreated() {
+    final void testGetCommentsWithCreated() {
         List<Comment> returnedComments = commentLogic.getCommentsWithCreated(expectedComment.getCreated());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -426,7 +426,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetCommentsWithPoints() {
+    final void testGetCommentsWithPoints() {
         List<Comment> returnedComments = commentLogic.getCommentsWithPoints(expectedComment.getPoints());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -436,7 +436,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetCommentsWithReplys() {
+    final void testGetCommentsWithReplys() {
         List<Comment> returnedComments = commentLogic.getCommentsWithReplys(expectedComment.getReplys());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));
@@ -446,7 +446,7 @@ class CommentLogicTest {
     }
 
     @Test
-    void testGetCommentsWithIsReply() {
+    final void testGetCommentsWithIsReply() {
         List<Comment> returnedComments = commentLogic.getCommentsWithIsReply(expectedComment.getIsReply());
         Comment comment = returnedComments.get(0);
         comment.setCreated(new Date(comment.getCreated().getTime()));

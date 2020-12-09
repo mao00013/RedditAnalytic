@@ -28,7 +28,7 @@ class RedditAccountLogicTest {
         TomcatStartUp.stopAndDestroyTomcat();
     }
     @BeforeEach
-    void setUp() {
+    final void setUp() {
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
 
         for(RedditAccount redditAccount: redditAccountLogic.getAll())
@@ -47,7 +47,7 @@ class RedditAccountLogicTest {
     }
 
     @AfterEach
-    void tearDown() {
+    final void tearDown() {
         if(expectedRedditAccount != null) {
             redditAccountLogic.delete(expectedRedditAccount);
         }
@@ -55,19 +55,19 @@ class RedditAccountLogicTest {
 
 
     @Test
-    void testGetColumnNames() {
+    final void testGetColumnNames() {
         List<String> stringList = redditAccountLogic.getColumnNames();
         assertEquals( Arrays.asList("ID", "name", "link_points", "comment_points", "created"), stringList );
     }
 
     @Test
-    void testGetColumnCodes() {
+    final void testGetColumnCodes() {
         List<String> list = redditAccountLogic.getColumnCodes();
         assertEquals(Arrays.asList(RedditAccountLogic.ID, RedditAccountLogic.NAME, RedditAccountLogic.LINKPOINTS, RedditAccountLogic.COMMENTPOINTS, RedditAccountLogic.CREATED), list);
     }
 
     @Test
-    void testExtractDataAsList() {
+    final void testExtractDataAsList() {
         List<?> list = redditAccountLogic.extractDataAsList(expectedRedditAccount);
         assertEquals(expectedRedditAccount.getId(), list.get(0));
         assertEquals(expectedRedditAccount.getName(), list.get(1));
@@ -77,7 +77,7 @@ class RedditAccountLogicTest {
     }
 
     @Test
-    void testCreateEntity() {
+    final void testCreateEntity() {
         Map<String, String[]> sampleMap = new HashMap<>();
         sampleMap.put(RedditAccountLogic.ID, new String[] {Integer.toString(expectedRedditAccount.getId())});
         sampleMap.put(RedditAccountLogic.NAME, new String[] {expectedRedditAccount.getName()});
@@ -246,21 +246,21 @@ class RedditAccountLogicTest {
     }
 
     @Test
-    void testGetWithId() {
+    final void testGetWithId() {
         RedditAccount retrunedRedditAccount = redditAccountLogic.getWithId(expectedRedditAccount.getId());
         retrunedRedditAccount.setCreated(new Date(retrunedRedditAccount.getCreated().getTime()));
         assertRedditAccountEquals(expectedRedditAccount, retrunedRedditAccount);
     }
 
     @Test
-    void testGetRedditAccountWithName() {
+    final void testGetRedditAccountWithName() {
         RedditAccount returnedRedditAccount = redditAccountLogic.getRedditAccountWithName(expectedRedditAccount.getName());
         returnedRedditAccount.setCreated(new Date(returnedRedditAccount.getCreated().getTime()));
         assertRedditAccountEquals(expectedRedditAccount, returnedRedditAccount);
     }
 
     @Test
-    void testGetRedditAccountsWithLinkPoints() {
+    final void testGetRedditAccountsWithLinkPoints() {
         List<RedditAccount> returnedRedditAccount = redditAccountLogic.getRedditAccountsWithLinkPoints(expectedRedditAccount.getLinkPoints());
         RedditAccount redditAccount = returnedRedditAccount.get(0);
         redditAccount.setCreated(new Date(redditAccount.getCreated().getTime()));
@@ -270,7 +270,7 @@ class RedditAccountLogicTest {
     }
 
     @Test
-    void testGetRedditAccountsWithCommentPoints() {
+    final void testGetRedditAccountsWithCommentPoints() {
         List<RedditAccount> returnedRedditAccount = redditAccountLogic.getRedditAccountsWithCommentPoints(expectedRedditAccount.getCommentPoints());
         RedditAccount redditAccount = returnedRedditAccount.get(0);
         redditAccount.setCreated(new Date(redditAccount.getCreated().getTime()));
@@ -280,7 +280,7 @@ class RedditAccountLogicTest {
     }
 
     @Test
-    void testGetRedditAccountsWithCreated() {
+    final void testGetRedditAccountsWithCreated() {
         List<RedditAccount> returnedRedditAccount = redditAccountLogic.getRedditAccountsWithCreated(expectedRedditAccount.getCreated());
         RedditAccount redditAccount = returnedRedditAccount.get(0);
         redditAccount.setCreated(new Date(redditAccount.getCreated().getTime()));
