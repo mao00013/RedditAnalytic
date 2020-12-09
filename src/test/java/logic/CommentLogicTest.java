@@ -174,7 +174,6 @@ class CommentLogicTest {
         sampleMap.put(CommentLogic.TEXT, new String[]{"Test Create Entity"});
         sampleMap.put(CommentLogic.POINTS, new String[]{Integer.toString(1)});
         sampleMap.put(CommentLogic.ISREPLY, new String[]{"1"});
-        sampleMap.put(CommentLogic.CREATED, new String[]{"2020-12-03"});
         sampleMap.put(CommentLogic.REPLYS, new String[]{Integer.toString(1)});
         sampleMap.put(CommentLogic.UNIQUEID, new String[]{"uid"});
         sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[] {expectedComment.getRedditAccountId().getId().toString()});

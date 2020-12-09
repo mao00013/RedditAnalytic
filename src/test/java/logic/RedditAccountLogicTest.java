@@ -1,6 +1,7 @@
 package logic;
 
 import common.TomcatStartUp;
+import common.ValidationException;
 import dal.EMFactory;
 import entity.Post;
 import entity.RedditAccount;
@@ -8,6 +9,8 @@ import org.junit.jupiter.api.*;
 
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -85,6 +88,138 @@ class RedditAccountLogicTest {
 
         RedditAccount returnedRedditAccount = redditAccountLogic.createEntity(sampleMap);
         assertRedditAccountEquals(expectedRedditAccount, returnedRedditAccount);
+    }
+
+    @Test
+    final void testCreateEntityAndAdd() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(RedditAccountLogic.NAME, new String[]{"Hello"});
+        sampleMap.put(RedditAccountLogic.LINKPOINTS, new String[]{Integer.toString(2)});
+        sampleMap.put(RedditAccountLogic.CREATED, new String[]{expectedRedditAccount.getCreated().toString()});
+        sampleMap.put(RedditAccountLogic.COMMENTPOINTS, new String[]{Integer.toString(2)});
+
+        RedditAccount returnedRedditAccount = redditAccountLogic.createEntity(sampleMap);
+        redditAccountLogic.add(returnedRedditAccount);
+        returnedRedditAccount = redditAccountLogic.getRedditAccountWithName(returnedRedditAccount.getName());
+        returnedRedditAccount.setCreated(new Date((returnedRedditAccount.getCreated().getTime())));
+        assertEquals(sampleMap.get(RedditAccountLogic.NAME)[0], returnedRedditAccount.getName());
+        redditAccountLogic.delete(returnedRedditAccount);
+    }
+
+    @Test
+    final void testCreateEntityNullAndEmptyValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map) -> {
+            map.clear();
+            map.put(RedditAccountLogic.ID, new String[]{Integer.toString(expectedRedditAccount.getId())});
+            map.put(RedditAccountLogic.NAME, new String[]{expectedRedditAccount.getName()});
+            map.put(RedditAccountLogic.COMMENTPOINTS, new String[]{Integer.toString(expectedRedditAccount.getCommentPoints())});
+            map.put(RedditAccountLogic.CREATED, new String[]{expectedRedditAccount.getCreated().toString()});
+            map.put(RedditAccountLogic.LINKPOINTS, new String[]{Integer.toString(expectedRedditAccount.getLinkPoints())});
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.ID, null);
+        assertThrows(NullPointerException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.ID, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> redditAccountLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.NAME, null);
+        assertThrows(NullPointerException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.NAME, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> redditAccountLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.CREATED, null);
+        assertThrows(NullPointerException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.CREATED, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> redditAccountLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.LINKPOINTS, null);
+        assertThrows(NullPointerException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.LINKPOINTS, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> redditAccountLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.COMMENTPOINTS, null);
+        assertThrows(NullPointerException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.COMMENTPOINTS, new String[]{});
+        assertThrows(IndexOutOfBoundsException.class, () -> redditAccountLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityBadLengthValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map) -> {
+            map.clear();
+            map.put(RedditAccountLogic.ID, new String[]{Integer.toString(expectedRedditAccount.getId())});
+            map.put(RedditAccountLogic.NAME, new String[]{expectedRedditAccount.getName()});
+            map.put(RedditAccountLogic.COMMENTPOINTS, new String[]{Integer.toString(expectedRedditAccount.getCommentPoints())});
+            map.put(RedditAccountLogic.LINKPOINTS, new String[]{Integer.toString(expectedRedditAccount.getLinkPoints())});
+            map.put(RedditAccountLogic.CREATED, new String[]{expectedRedditAccount.getCreated().toString()});
+        };
+
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            //from 97 inclusive to 123 exclusive
+            return new Random().ints('a', 'z' + 1).limit(length)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.ID, new String[]{""});
+        assertThrows(ValidationException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.ID, new String[]{"88a"});
+        assertThrows(ValidationException.class, () -> redditAccountLogic.createEntity(sampleMap));
+
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(RedditAccountLogic.NAME, new String[]{""});
+        assertThrows(ValidationException.class, () -> redditAccountLogic.createEntity(sampleMap));
+        sampleMap.replace(RedditAccountLogic.NAME, new String[]{generateString.apply(101)});
+        assertThrows(ValidationException.class, () -> redditAccountLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityEdgeValues() {
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            return new Random().ints('a', 'z' + 1).limit(length)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        };
+
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(RedditAccountLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(RedditAccountLogic.NAME, new String[]{generateString.apply(1)});
+        sampleMap.put(RedditAccountLogic.CREATED, new String[]{expectedRedditAccount.getCreated().toString()});
+        sampleMap.put(RedditAccountLogic.LINKPOINTS, new String[]{Integer.toString(1)});
+        sampleMap.put(RedditAccountLogic.COMMENTPOINTS, new String[]{Integer.toString(1)});
+
+        RedditAccount returnedRedditAccount = redditAccountLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.ID)[0]), returnedRedditAccount.getId());
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.COMMENTPOINTS)[0]), returnedRedditAccount.getCommentPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.LINKPOINTS)[0]), returnedRedditAccount.getLinkPoints());
+        assertEquals(sampleMap.get(RedditAccountLogic.NAME)[0], returnedRedditAccount.getName());
+        assertEquals(sampleMap.get(RedditAccountLogic.CREATED)[0], returnedRedditAccount.getCreated().toString());
+
+        sampleMap = new HashMap<>();
+        sampleMap.put(RedditAccountLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(RedditAccountLogic.NAME, new String[]{generateString.apply(100)});
+        sampleMap.put(RedditAccountLogic.CREATED, new String[]{expectedRedditAccount.getCreated().toString()});
+        sampleMap.put(RedditAccountLogic.LINKPOINTS, new String[]{Integer.toString(expectedRedditAccount.getLinkPoints())});
+        sampleMap.put(RedditAccountLogic.COMMENTPOINTS, new String[]{Integer.toString(expectedRedditAccount.getCommentPoints())});
+
+        returnedRedditAccount = redditAccountLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.ID)[0]), returnedRedditAccount.getId());
+        assertEquals((sampleMap.get(RedditAccountLogic.NAME)[0]), returnedRedditAccount.getName());
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.COMMENTPOINTS)[0]), returnedRedditAccount.getCommentPoints());
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.LINKPOINTS)[0]), returnedRedditAccount.getId());
+        assertEquals(Integer.parseInt(sampleMap.get(RedditAccountLogic.LINKPOINTS)[0]), returnedRedditAccount.getId());
+        assertEquals(sampleMap.get(RedditAccountLogic.CREATED)[0], returnedRedditAccount.getCreated().toString());
     }
     /**
      * helper method for testing all redditaccount fields

@@ -1,6 +1,7 @@
 package logic;
 
 import common.TomcatStartUp;
+import common.ValidationException;
 import dal.EMFactory;
 import entity.Post;
 import entity.RedditAccount;
@@ -9,9 +10,10 @@ import org.junit.jupiter.api.*;
 
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.IntFunction;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PostLogicTest {
     private PostLogic postLogic;
@@ -136,6 +138,182 @@ class PostLogicTest {
         assertPostEquals(expectedPost, returnedPost);
 
     }
+
+    @Test
+    final void testCreateEntityAndAdd() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(PostLogic.TITLE, new String[]{"Test Create Entity"});
+        sampleMap.put(PostLogic.CREATED, new String[]{expectedPost.getCreated().toString()});
+        sampleMap.put(PostLogic.POINTS, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
+        sampleMap.put(PostLogic.UNIQUE_ID, new String[]{"222"});
+        sampleMap.put(PostLogic.COMMENT_COUNT, new String[]{Integer.toString(2)});
+        sampleMap.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{expectedPost.getRedditAccountId().getId().toString()});
+
+        Post returnedPost = postLogic.createEntity(sampleMap);
+        postLogic.add(returnedPost);
+        returnedPost = postLogic.getPostWithUniqueId(returnedPost.getUniqueID());
+        returnedPost.setCreated(new Date(returnedPost.getCreated().getTime()));
+        assertEquals(sampleMap.get(PostLogic.TITLE)[0], returnedPost.getTitle());
+        postLogic.delete(returnedPost);
+    }
+
+    @Test
+    final void testCreateEntityNullAndEmptyValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map) -> {
+            map.clear();
+            map.put(PostLogic.ID, new String[] {Integer.toString(expectedPost.getId())});
+            map.put(PostLogic.TITLE, new String[] {expectedPost.getTitle()});
+            map.put(PostLogic.CREATED, new String[] {expectedPost.getCreated().toString()});
+            map.put(PostLogic.POINTS, new String[] {Integer.toString(expectedPost.getPoints())});
+            map.put(postLogic.SUBREDDIT_ID, new String[] {expectedPost.getSubredditId().getId().toString()});
+            map.put(postLogic.UNIQUE_ID, new String[] {expectedPost.getUniqueID()});
+            map.put(PostLogic.COMMENT_COUNT, new String[] {Integer.toString(expectedPost.getCommentCount())});
+            map.put(PostLogic.REDDIT_ACCOUNT_ID, new String[] {expectedPost.getRedditAccountId().getId().toString()});
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.ID, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.ID, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.TITLE, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.TITLE, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.CREATED, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.CREATED, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.POINTS, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.POINTS, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.SUBREDDIT_ID, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.SUBREDDIT_ID, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.UNIQUE_ID, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.UNIQUE_ID, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.COMMENT_COUNT, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.COMMENT_COUNT, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.REDDIT_ACCOUNT_ID, null);
+        assertThrows(NullPointerException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.REDDIT_ACCOUNT_ID, new String[] {});
+        assertThrows(IndexOutOfBoundsException.class, () -> postLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityBadLengthValues() {
+        Map<String, String[]> sampleMap = new HashMap<>();
+        Consumer<Map<String, String[]>> fillMap = (Map<String, String[]> map) -> {
+            map.clear();
+            map.put(PostLogic.ID, new String[]{Integer.toString(expectedPost.getId())});
+            map.put(PostLogic.TITLE, new String[]{expectedPost.getTitle()});
+            map.put(PostLogic.CREATED, new String[]{expectedPost.getCreated().toString()});
+            map.put(PostLogic.POINTS, new String[]{Integer.toString(expectedPost.getPoints())});
+            map.put(postLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
+            map.put(postLogic.UNIQUE_ID, new String[]{expectedPost.getUniqueID()});
+            map.put(PostLogic.COMMENT_COUNT, new String[]{Integer.toString(expectedPost.getCommentCount())});
+            map.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{expectedPost.getRedditAccountId().getId().toString()});
+        };
+
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            //from 97 inclusive to 123 exclusive
+            return new Random().ints('a', 'z' + 1).limit(length)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        };
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.ID, new String[]{""});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.ID, new String[]{"88a"});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(PostLogic.TITLE, new String[]{""});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(PostLogic.TITLE, new String[]{generateString.apply(256)});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+
+        fillMap.accept(sampleMap);
+        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{""});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+        sampleMap.replace(CommentLogic.UNIQUEID, new String[]{generateString.apply(11)});
+        assertThrows(ValidationException.class, () -> postLogic.createEntity(sampleMap));
+    }
+
+    @Test
+    final void testCreateEntityEdgeValues() {
+        IntFunction<String> generateString = (int length) -> {
+            //https://www.baeldung.com/java-random-string#java8-alphabetic
+            return new Random().ints('a', 'z' + 1).limit(length)
+                    .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                    .toString();
+        };
+
+        Map<String, String[]> sampleMap = new HashMap<>();
+        sampleMap.put(PostLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.TITLE, new String[]{generateString.apply(1)});
+        sampleMap.put(PostLogic.CREATED, new String[]{expectedPost.getCreated().toString()});
+        sampleMap.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{expectedPost.getRedditAccountId().getId().toString()});
+        sampleMap.put(PostLogic.COMMENT_COUNT, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.UNIQUE_ID, new String[]{generateString.apply(1)});
+        sampleMap.put(PostLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
+        sampleMap.put(PostLogic.POINTS, new String[]{Integer.toString(1)});
+
+        Post returnedPost = postLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.ID)[0]), returnedPost.getId());
+        assertEquals(sampleMap.get(PostLogic.TITLE)[0], returnedPost.getTitle());
+        assertEquals(sampleMap.get(PostLogic.CREATED)[0], returnedPost.getCreated().toString());
+        assertEquals(sampleMap.get(PostLogic.REDDIT_ACCOUNT_ID)[0], returnedPost.getRedditAccountId().getId().toString());
+        assertEquals(sampleMap.get(PostLogic.COMMENT_COUNT)[0], returnedPost.getCommentCount());
+        assertEquals(sampleMap.get(PostLogic.POINTS)[0], returnedPost.getPoints());
+        assertEquals(sampleMap.get(PostLogic.UNIQUE_ID)[0], returnedPost.getUniqueID());
+        assertEquals(sampleMap.get(PostLogic.SUBREDDIT_ID)[0], returnedPost.getSubredditId().getId().toString());
+
+        sampleMap = new HashMap<>();
+        sampleMap.put(PostLogic.ID, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.TITLE, new String[]{generateString.apply(255)});
+        sampleMap.put(PostLogic.UNIQUE_ID, new String[]{generateString.apply(10)});
+        sampleMap.put(PostLogic.CREATED, new String[]{expectedPost.getCreated().toString()});
+        sampleMap.put(PostLogic.POINTS, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.COMMENT_COUNT, new String[]{Integer.toString(1)});
+        sampleMap.put(PostLogic.REDDIT_ACCOUNT_ID, new String[]{expectedPost.getRedditAccountId().getId().toString()});
+        sampleMap.put(PostLogic.SUBREDDIT_ID, new String[]{expectedPost.getSubredditId().getId().toString()});
+
+        returnedPost = postLogic.createEntity(sampleMap);
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.ID) [0]), returnedPost.getId());
+        assertEquals(sampleMap.get(PostLogic.TITLE) [0], returnedPost.getTitle());
+        assertEquals(sampleMap.get(PostLogic.CREATED) [0], returnedPost.getCreated().toString());
+        assertEquals(sampleMap.get(PostLogic.UNIQUE_ID )[0], returnedPost.getUniqueID());
+        assertEquals(Integer.parseInt(sampleMap.get(PostLogic.COMMENT_COUNT) [0]), returnedPost.getCommentCount());
+        assertEquals(sampleMap.get(PostLogic.POINTS) [0], returnedPost.getPoints());
+        assertEquals(sampleMap.get(PostLogic.REDDIT_ACCOUNT_ID) [0], returnedPost.getRedditAccountId().getId().toString());
+        assertEquals(sampleMap.get(PostLogic.SUBREDDIT_ID) [0], returnedPost.getSubredditId().getId().toString());
+    }
+
+
     /**
      * helper method for testing all comment fields
      *
@@ -219,7 +397,7 @@ class PostLogicTest {
     }
 
     @Test
-    void TestGetPostsWithCreated() {
+    void testGetPostsWithCreated() {
         List<Post> returnedPost = postLogic.getPostsWithCreated(expectedPost.getCreated());
         Post post = returnedPost.get(0);
         post.setCreated(new Date(post.getCreated().getTime()));
