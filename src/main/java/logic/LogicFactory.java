@@ -14,6 +14,12 @@ public abstract class LogicFactory {
     public LogicFactory() {
     }
 
+    /**
+     *  create logic by classname
+     * @param entityName name of logic
+     * @param <T>
+     * @return new logic
+     */
     public static <T> T getFor(String entityName) {
         try {
             Class<?> type = (Class<T>) Class.forName(PACKAGE + entityName + SUFFIX);
@@ -24,6 +30,12 @@ public abstract class LogicFactory {
         }
     }
 
+    /**
+     *
+     * @param type logic type
+     * @param <T>
+     * @return new logic
+     */
     public static <T> T getFor(Class<T> type) {
         try {
 

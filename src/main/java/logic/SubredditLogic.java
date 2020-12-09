@@ -1,24 +1,28 @@
 package logic;
 
 import common.ValidationException;
-import dal.RedditAccountDAL;
+import dal.SubredditDAL;
+import entity.Account;
 import entity.Post;
-import entity.RedditAccount;
 import entity.Subreddit;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.function.ObjIntConsumer;
 
-public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccountDAL> {
+public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
+
+    public static final String SUBSCRIBERS = "subscribers";
     public static final String NAME = "name";
-    public static final String LINKPOINTS = "link_points";
-    public static final String COMMENTPOINTS = "comment_points";
-    public static final String CREATED = "created";
+    public static final String URL = "url";
     public static final String ID = "id";
 
-    RedditAccountLogic() {
-        super(new RedditAccountDAL());
+    public SubredditLogic() {
+        super(new SubredditDAL());
     }
+
     /**
      * getColumnNames
      *
@@ -26,8 +30,9 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
      */
     @Override
     public List<String> getColumnNames() {
-        return Arrays.asList("ID", "name", "link_points", "comment_points", "created");
+        return Arrays.asList("ID", "subscribers", "name", "url");
     }
+
     /**
      * get Column Codes
      *
@@ -35,7 +40,7 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
      */
     @Override
     public List<String> getColumnCodes() {
-        return Arrays.asList(ID, NAME, LINKPOINTS, COMMENTPOINTS, CREATED);
+        return Arrays.asList(ID, SUBSCRIBERS, NAME, URL);
     }
 
     /**
@@ -45,20 +50,21 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
      * @return entity value as list
      */
     @Override
-    public List<?> extractDataAsList(RedditAccount redditAccount) {
-        return Arrays.asList(redditAccount.getId(), redditAccount.getName(), redditAccount.getLinkPoints(), redditAccount.getCommentPoints(), redditAccount.getCreated());
+    public List<?> extractDataAsList(Subreddit subreddit) {
+        return Arrays.asList(subreddit.getId(), subreddit.getSubscribers(), subreddit.getName(), subreddit.getUrl());
     }
 
     /**
-     *  create entity
+     * create entity
+     *
      * @param parameterMap entity value map
-     * @return new entity
+     * @return entity
      */
     @Override
-    public RedditAccount createEntity(Map<String, String[]> parameterMap) {
-        Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
+    public Subreddit createEntity(Map<String, String[]> parameterMap) {
 
-        RedditAccount entity = new RedditAccount();
+        Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
+        Subreddit entity = new Subreddit();
         if (parameterMap.containsKey(ID)) {
             try {
                 entity.setId(Integer.parseInt(parameterMap.get(ID)[0]));
@@ -81,72 +87,68 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
         };
 
         String name = parameterMap.get(NAME)[0];
-        String link_points = parameterMap.get(LINKPOINTS)[0];
-        String comment_points = parameterMap.get(COMMENTPOINTS)[0];
-        String created = parameterMap.get(CREATED)[0];
+        String url = parameterMap.get(URL)[0];
+        String subscribers = parameterMap.get(SUBSCRIBERS)[0];
 
         //validate the data
         validator.accept(name, 100);
-
+        validator.accept(url, 200);
 
         //set values on entity
         entity.setName(name);
-        entity.setLinkPoints(Integer.parseInt(link_points));
-        entity.setCommentPoints(Integer.parseInt(comment_points));
-        entity.setCreated(new Date(created));
+        entity.setUrl(url);
+        entity.setSubscribers(Integer.parseInt(subscribers));
         return entity;
 
+
     }
+
     /**
      * get all entity
      *
      * @return list of all entity
      */
     @Override
-    public List<RedditAccount> getAll() {
+    public List<Subreddit> getAll() {
         return get(() -> dal().findAll());
     }
+
     /**
      *  get entity with id
      * @param id
      * @return entity
      */
     @Override
-    public RedditAccount getWithId(int id) {
+    public Subreddit getWithId(int id) {
         return get(() -> dal().findById(id));
     }
+
     /**
      *  get entity with name
      * @param name
      * @return entity
      */
-    public RedditAccount getRedditAccountWithName(String name) {
+    public Subreddit getSubredditWithName(String name) {
         return get(() -> dal().findByName(name));
     }
+
     /**
-     *  get entity with linkPoints
-     * @param linkPoints
+     *  get entity with url
+     * @param url
      * @return entity
      */
-    public List<RedditAccount> getRedditAccountsWithLinkPoints(int linkPoints) {
-        return get(() -> dal().findByLinkPoints(linkPoints));
-    }
-    /**
-     *  get entity with commentPoints
-     * @param commentPoints
-     * @return entity
-     */
-    public List<RedditAccount> getRedditAccountsWithCommentPoints(int commentPoints) {
-        return get(() -> dal().findByCommentPoints(commentPoints));
-    }
-    /**
-     *  get entity with created
-     * @param created
-     * @return entity
-     */
-    public List<RedditAccount> getRedditAccountsWithCreated(Date created) {
-        return get(() -> dal().findByCreated(created));
+    public Subreddit getSubredditWithUrl(String url) {
+        return get(() -> dal().findByUrl(url));
     }
 
+    /**
+     *  get entity with subscribers
+     * @param subscribers
+     * @return entity
+     */
+    public List<Subreddit> getSubredditsWithSubscribers(int subscribers) {
+
+        return get(() -> dal().findBySubscribers(subscribers));
+    }
 
 }
