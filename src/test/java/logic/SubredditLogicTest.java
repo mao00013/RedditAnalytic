@@ -61,16 +61,16 @@ class SubredditLogicTest {
     @Test
     final void textGetColumnCodes() {
         List<String> list = subredditLogic.getColumnCodes();
-        assertEquals(Arrays.asList(SubredditLogic.ID, SubredditLogic.NAME, SubredditLogic.URL, SubredditLogic.SUBSCRIBERS), list);
+        assertEquals(Arrays.asList(SubredditLogic.ID, SubredditLogic.SUBSCRIBERS, SubredditLogic.NAME, SubredditLogic.URL), list);
     }
 
     @Test
     final void testExtractDataAsList() {
         List<?> list = subredditLogic.extractDataAsList(expectedSubreddit);
         assertEquals(expectedSubreddit.getId(), list.get(0));
-        assertEquals(expectedSubreddit.getName(), list.get(1));
-        assertEquals(expectedSubreddit.getUrl(), list.get(2));
-        assertEquals(expectedSubreddit.getSubscribers(), list.get(3));
+        assertEquals(expectedSubreddit.getSubscribers(), list.get(1));                 assertEquals(expectedSubreddit.getName(), list.get(2));
+        assertEquals(expectedSubreddit.getUrl(), list.get(3));
+
     }
 
     @Test

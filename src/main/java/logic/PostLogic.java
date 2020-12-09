@@ -24,22 +24,40 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
     public PostLogic() {
         super(new PostDAL());
     }
-
+    /**
+     * getColumnNames
+     *
+     * @return columName list
+     */
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList("ID", "title", "created", "points","subreddit_id", "unique_id", "comment_count", "reddit_account_id");
     }
-
+    /**
+     * get Column Codes
+     *
+     * @return Colum code as list
+     */
     @Override
     public List<String> getColumnCodes() {
         return Arrays.asList(ID, TITLE, CREATED, POINTS, SUBREDDIT_ID, UNIQUE_ID, COMMENT_COUNT, REDDIT_ACCOUNT_ID);
     }
-
+    /**
+     * extract data as list
+     *
+     * @param post entity
+     * @return entity value as list
+     */
     @Override
     public List<?> extractDataAsList(Post post) {
         return Arrays.asList(post.getId(), post.getTitle(), post.getCreated(), post.getPoints(),  post.getSubredditId(), post.getUniqueID(), post.getCommentCount(), post.getRedditAccountId());
     }
-
+    /**
+     * create entity
+     *
+     * @param parameterMap entity value map
+     * @return entity
+     */
     @Override
     public Post createEntity(Map<String, String[]> parameterMap) {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
@@ -92,40 +110,72 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         entity.setCreated(new Date(created));
         return entity;
     }
-
+    /**
+     * get all entity
+     * @return list of all entity
+     */
     @Override
     public List<Post> getAll() {
         return get(() -> dal().findAll());
     }
-
+    /**
+     *  get entity with id
+     * @param id
+     * @return entity
+     */
     @Override
     public Post getWithId(int id) {
         return get(() -> dal().findById(id));
     }
-
+    /**
+     *  get entity with uniqueId
+     * @param uniqueId
+     * @return entity
+     */
     public Post getPostWithUniqueId(String uniqueId) {
-        return get(() ->  dal().findByUniqueId(uniqueId));
+        return get(() -> dal().findByUniqueId(uniqueId));
     }
-
+    /**
+     *  get entity with points
+     * @param points
+     * @return entity
+     */
     public List<Post> getPostWithPoints(int points) {
-        return get(() ->  dal().findByPoints(points));
-    }
 
+        return get(() -> dal().findByPoints(points));
+    }
+    /**
+     *  get entity with commentCount
+     * @param commentCount
+     * @return entity
+     */
     public List<Post> getPostsWithCommentCount(int commentCount) {
-        return get(() ->dal().findByCommentCount(commentCount));
+        return get(() -> dal().findByCommentCount(commentCount));
     }
-
+    /**
+     *  get entity with id
+     * @param id
+     * @return entity
+     */
     public List<Post> getPostsWithAuthorID(int id) {
 
         return get(() -> dal().findByAuthor(id));
     }
-
+    /**
+     *  get entity with title
+     * @param title
+     * @return entity
+     */
     public List<Post> getPostsWithTitle(String title) {
 
-        return get(()->dal().findByTitle(title));
+        return get(()-> dal().findByTitle(title));
     }
-
+    /**
+     *  get entity with created
+     * @param created
+     * @return entity
+     */
     public List<Post> getPostsWithCreated(Date created) {
-        return get(()->dal().findByCreated(created));
+        return get(()-> dal().findByCreated(created));
     }
 }

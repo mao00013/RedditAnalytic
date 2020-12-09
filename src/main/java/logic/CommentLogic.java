@@ -27,22 +27,40 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
     public CommentLogic() {
         super(new CommentDAL());
     }
-
+    /**
+     * getColumnNames
+     *
+     * @return columName list
+     */
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList("ID", "text", "created", "points", "replys", "is_reply", "unique_id", "post_id", "reddit_account_id");
     }
-
+    /**
+     * get Column Codes
+     *
+     * @return Colum code as list
+     */
     @Override
     public List<String> getColumnCodes() {
         return Arrays.asList(ID, TEXT, CREATED, POINTS, REPLYS, ISREPLY, UNIQUEID, POST_ID, REDDIT_ACCOUNT_ID);
     }
-
+    /**
+     * extract data as list
+     *
+     * @param comment entity
+     * @return entity value as list
+     */
     @Override
     public List<?> extractDataAsList(Comment comment) {
         return Arrays.asList(comment.getId(), comment.getText(), comment.getCreated(), comment.getPoints(), comment.getReplys(), comment.getIsReply(), comment.getUniqueId(), comment.getPostId(), comment.getRedditAccountId());
     }
-
+    /**
+     * create entity
+     *
+     * @param parameterMap entity value map
+     * @return entity
+     */
     @Override
     public Comment createEntity(Map<String, String[]> parameterMap) {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
@@ -100,38 +118,72 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
 
         return entity;
     }
-
+    /**
+     * get all entity
+     *
+     * @return list of all entity
+     */
     @Override
     public List<Comment> getAll() {
         return get(() -> dal().findAll());
     }
 
+    /**
+     *  get entity with id
+     * @param id
+     * @return entity
+     */
     @Override
     public Comment getWithId(int id) {
         return get(() -> dal().findById(id));
     }
-
+    /**
+     *  get entity with uniqueId
+     * @param uniqueId
+     * @return entity
+     */
     public Comment getCommentWithUniqueId(String uniqueId) {
         return get(() -> dal().findByUniqueId(uniqueId));
     }
-
+    /**
+     *  get entity with text
+     * @param text
+     * @return entity
+     */
     public List<Comment> getCommentsWithText(String text) {
         return get(() -> dal().findByText(text));
     }
-
+    /**
+     *  get entity with created
+     * @param created
+     * @return entity
+     */
     public List<Comment> getCommentsWithCreated(Date created) {
         return get(() -> dal().findByCreated(created));
     }
-
+    /**
+     *  get entity with points
+     * @param points
+     * @return entity
+     */
     public List<Comment> getCommentsWithPoints(int points) {
-        return get(() -> dal().findByPoints(points));
+        return get(() ->dal().findByPoints(points));
     }
-
+    /**
+     *  get entity with replys
+     * @param replys
+     * @return entity
+     */
     public List<Comment> getCommentsWithReplys(int replys) {
         return get(() -> dal().findByReplys(replys));
     }
-
+    /**
+     *  get entity with isReply
+     * @param isReply
+     * @return entity
+     */
     public List<Comment> getCommentsWithIsReply(boolean isReply) {
-        return get(() -> dal().findByIsReply(isReply));
+
+        return get(() ->dal().findByIsReply(isReply));
     }
 }
