@@ -14,7 +14,7 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
     }
 
     /**
-     *  find all eneity
+     *  find all entity
      * @return list of all entity
      */
     @Override
