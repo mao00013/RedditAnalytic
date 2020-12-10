@@ -23,21 +23,43 @@ public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
         super(new SubredditDAL());
     }
 
+    /**
+     * getColumnNames
+     *
+     * @return columName list
+     */
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList("ID", "subscribers", "name", "url");
     }
 
+    /**
+     * get Column Codes
+     *
+     * @return Colum code as list
+     */
     @Override
     public List<String> getColumnCodes() {
         return Arrays.asList(ID, SUBSCRIBERS, NAME, URL);
     }
 
+    /**
+     * extract data as list
+     *
+     * @param subreddit entity
+     * @return entity value as list
+     */
     @Override
     public List<?> extractDataAsList(Subreddit subreddit) {
         return Arrays.asList(subreddit.getId(), subreddit.getSubscribers(), subreddit.getName(), subreddit.getUrl());
     }
 
+    /**
+     * create entity
+     *
+     * @param parameterMap entity value map
+     * @return entity
+     */
     @Override
     public Subreddit createEntity(Map<String, String[]> parameterMap) {
 
@@ -81,24 +103,49 @@ public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     }
 
+    /**
+     * get all entity
+     *
+     * @return list of all entity
+     */
     @Override
     public List<Subreddit> getAll() {
         return get(() -> dal().findAll());
     }
 
+    /**
+     *  get entity with id
+     * @param id
+     * @return entity
+     */
     @Override
     public Subreddit getWithId(int id) {
         return get(() -> dal().findById(id));
     }
 
+    /**
+     *  get entity with name
+     * @param name
+     * @return entity
+     */
     public Subreddit getSubredditWithName(String name) {
         return get(() -> dal().findByName(name));
     }
 
+    /**
+     *  get entity with url
+     * @param url
+     * @return entity
+     */
     public Subreddit getSubredditWithUrl(String url) {
-        return get(() -> getSubredditWithUrl(url));
+        return get(() -> dal().findByUrl(url));
     }
 
+    /**
+     *  get entity with subscribers
+     * @param subscribers
+     * @return entity
+     */
     public List<Subreddit> getSubredditsWithSubscribers(int subscribers) {
 
         return get(() -> dal().findBySubscribers(subscribers));

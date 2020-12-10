@@ -19,22 +19,41 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
     RedditAccountLogic() {
         super(new RedditAccountDAL());
     }
-
+    /**
+     * getColumnNames
+     *
+     * @return columName list
+     */
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList("ID", "name", "link_points", "comment_points", "created");
     }
-
+    /**
+     * get Column Codes
+     *
+     * @return Colum code as list
+     */
     @Override
     public List<String> getColumnCodes() {
         return Arrays.asList(ID, NAME, LINKPOINTS, COMMENTPOINTS, CREATED);
     }
 
+    /**
+     * extract data as list
+     *
+     * @param subreddit entity
+     * @return entity value as list
+     */
     @Override
     public List<?> extractDataAsList(RedditAccount redditAccount) {
         return Arrays.asList(redditAccount.getId(), redditAccount.getName(), redditAccount.getLinkPoints(), redditAccount.getCommentPoints(), redditAccount.getCreated());
     }
 
+    /**
+     *  create entity
+     * @param parameterMap entity value map
+     * @return new entity
+     */
     @Override
     public RedditAccount createEntity(Map<String, String[]> parameterMap) {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
@@ -78,31 +97,55 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
         return entity;
 
     }
-
+    /**
+     * get all entity
+     *
+     * @return list of all entity
+     */
     @Override
     public List<RedditAccount> getAll() {
         return get(() -> dal().findAll());
     }
-
+    /**
+     *  get entity with id
+     * @param id
+     * @return entity
+     */
     @Override
     public RedditAccount getWithId(int id) {
         return get(() -> dal().findById(id));
     }
-
+    /**
+     *  get entity with name
+     * @param name
+     * @return entity
+     */
     public RedditAccount getRedditAccountWithName(String name) {
-        return get(() -> getRedditAccountWithName(name));
+        return get(() -> dal().findByName(name));
     }
-
+    /**
+     *  get entity with linkPoints
+     * @param linkPoints
+     * @return entity
+     */
     public List<RedditAccount> getRedditAccountsWithLinkPoints(int linkPoints) {
-        return get(() -> getRedditAccountsWithLinkPoints(linkPoints));
+        return get(() -> dal().findByLinkPoints(linkPoints));
     }
-
+    /**
+     *  get entity with commentPoints
+     * @param commentPoints
+     * @return entity
+     */
     public List<RedditAccount> getRedditAccountsWithCommentPoints(int commentPoints) {
-        return get(() -> getRedditAccountsWithCommentPoints(commentPoints));
+        return get(() -> dal().findByCommentPoints(commentPoints));
     }
-
+    /**
+     *  get entity with created
+     * @param created
+     * @return entity
+     */
     public List<RedditAccount> getRedditAccountsWithCreated(Date created) {
-        return get(() -> getRedditAccountsWithCreated(created));
+        return get(() -> dal().findByCreated(created));
     }
 
 

@@ -145,14 +145,14 @@ public class CreateComment extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
-        if( connectionCount < 3 ){
-            connectionCount++;
-            try {
-                TimeUnit.SECONDS.sleep( 60 );
-            } catch( InterruptedException ex ) {
-                Logger.getLogger( CreateComment.class.getName() ).log( Level.SEVERE, null, ex );
-            }
-        }
+//        if( connectionCount < 3 ){
+//            connectionCount++;
+//            try {
+//                TimeUnit.SECONDS.sleep( 60 );
+//            } catch( InterruptedException ex ) {
+//                Logger.getLogger( CreateComment.class.getName() ).log( Level.SEVERE, null, ex );
+//            }
+//        }
         CommentLogic cLogic = LogicFactory.getFor( "Comment" );
         String text = request.getParameter( CommentLogic.TEXT );
         if( cLogic.getCommentsWithText( text ) == null ){
