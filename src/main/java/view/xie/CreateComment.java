@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package view.xie;
-import entity.Account;
+
 import entity.Comment;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -57,7 +57,7 @@ public class CreateComment extends HttpServlet {
             //from parameter map.
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", CommentLogic.TEXT );
             out.println( "<br>" );
-            out.println( "Cteated:<br>" );
+            out.println( "Cteated:YYYY-MM-DD hh:mm:ss<br>" );
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", CommentLogic.CREATED );
             out.println( "<br>" );
             out.println( "Points:<br>" );
@@ -154,17 +154,21 @@ public class CreateComment extends HttpServlet {
 //            }
 //        }
         CommentLogic cLogic = LogicFactory.getFor( "Comment" );
-        String text = request.getParameter( CommentLogic.TEXT );
-        if( cLogic.getCommentsWithText( text ) == null ){
+        String uniqueId = request.getParameter( CommentLogic.UNIQUEID );
+        if( cLogic.getCommentWithUniqueId( uniqueId ) == null ){
             try {
                 Comment comment = cLogic.createEntity( request.getParameterMap() );
+                //create the two logics for post and reddit account
+                //get the entities from logic using getWithId
+                //set the entities on your comment object before adding comment to db
                 cLogic.add( comment );
             } catch( Exception ex ) {
+                log("",ex);
                 errorMessage = ex.getMessage();
             }
         } else {
             //if duplicate print the error message
-            errorMessage = "Text: \"" + text + "\" already exists";
+            errorMessage = "UniqueId: \"" + uniqueId + "\" already exists";
         }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page

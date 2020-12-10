@@ -1,6 +1,5 @@
 package dal;
 
-import entity.Comment;
 import entity.Subreddit;
 
 import java.util.HashMap;
@@ -14,7 +13,6 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
     }
 
     /**
-     *  find all eneity
      * @return list of all entity
      */
     @Override

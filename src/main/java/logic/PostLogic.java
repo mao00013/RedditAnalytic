@@ -31,7 +31,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
      */
     @Override
     public List<String> getColumnNames() {
-        return Arrays.asList("ID", "unique_id", "points", "comment_points", "title", "created", "subreddit_id", "reddit_account_id");
+        return Arrays.asList("ID", "title", "created", "points","subreddit_id", "unique_id", "comment_count", "reddit_account_id");
     }
     /**
      * get Column Codes
@@ -40,7 +40,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
      */
     @Override
     public List<String> getColumnCodes() {
-        return Arrays.asList(ID, UNIQUE_ID, POINTS, COMMENT_COUNT, TITLE, CREATED, SUBREDDIT_ID, REDDIT_ACCOUNT_ID);
+        return Arrays.asList(ID, TITLE, CREATED, POINTS, SUBREDDIT_ID, UNIQUE_ID, COMMENT_COUNT, REDDIT_ACCOUNT_ID);
     }
     /**
      * extract data as list
@@ -50,7 +50,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
      */
     @Override
     public List<?> extractDataAsList(Post post) {
-        return Arrays.asList(post.getId(), post.getUniqueID(), post.getPoints(), post.getCommentCount(), post.getTitle(), post.getCreated(), post.getSubredditId(), post.getRedditAccountId());
+        return Arrays.asList(post.getId(), post.getTitle(), post.getCreated(), post.getPoints(),  post.getSubredditId(), post.getUniqueID(), post.getCommentCount(), post.getRedditAccountId());
     }
     /**
      * create entity
@@ -63,8 +63,8 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
 
         Post entity = new Post();
-        RedditAccount ra = new RedditAccount();
-        Subreddit s = new Subreddit();
+//        RedditAccount ra = new RedditAccount();
+//        Subreddit s = new Subreddit();
         if (parameterMap.containsKey(ID)) {
             try {
                 entity.setId(Integer.parseInt(parameterMap.get(ID)[0]));
@@ -85,8 +85,8 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
                 throw new ValidationException(error);
             }
         };
-        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
-        String subreddit_id = parameterMap.get(SUBREDDIT_ID)[0];
+//        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
+//        String subreddit_id = parameterMap.get(SUBREDDIT_ID)[0];
         String uniqueid = parameterMap.get(UNIQUE_ID)[0];
         String points = parameterMap.get(POINTS)[0];
         String comment_count = parameterMap.get(COMMENT_COUNT)[0];
@@ -96,18 +96,18 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         //validate the data
         validator.accept(uniqueid, 10);
         validator.accept(title, 255);
-        ra.setId(Integer.parseInt(reddit_account_id));
-        s.setId(Integer.parseInt(subreddit_id));
+//        ra.setId(Integer.parseInt(reddit_account_id));
+//        s.setId(Integer.parseInt(subreddit_id));
 
 
         //set values on entity
-        entity.setRedditAccountId(ra);
-        entity.setSubredditId(s);
+//        entity.setRedditAccountId(ra);
+//        entity.setSubredditId(s);
         entity.setUniqueId(uniqueid);
         entity.setTitle(title);
         entity.setPoints(Integer.parseInt(points));
         entity.setCommentCount(Integer.parseInt(comment_count));
-        entity.setCreated(new Date(created));
+        entity.setCreated(convertStringToDate(created));
         return entity;
     }
     /**
@@ -141,6 +141,7 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
      * @return entity
      */
     public List<Post> getPostWithPoints(int points) {
+
         return get(() -> dal().findByPoints(points));
     }
     /**

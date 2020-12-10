@@ -5,6 +5,7 @@
  */
 package view.xie;
 
+import entity.Post;
 import entity.Subreddit;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,16 +15,19 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.LogicFactory;
+import logic.PostLogic;
 import logic.SubredditLogic;
 
 /**
  *
  * @author Lu
  */
+@WebServlet( name = "CreatePost", urlPatterns = { "/CreatePost" } )
 public class CreatePost extends HttpServlet {
       private String errorMessage = null;
 
@@ -44,23 +48,35 @@ public class CreatePost extends HttpServlet {
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>Create Account</title>" );
+            out.println( "<title>Create Post</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            out.println( "Subscribers:<br>" );
+            out.println( "Title:<br>" );
             //instead of typing the name of column manualy use the static vraiable in logic
             //use the same name as column id of the table. will use this name to get date
             //from parameter map.
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.SUBSCRIBERS );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.TITLE );
             out.println( "<br>" );
-            out.println( "Name:<br>" );
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.NAME );
+            out.println( "Created:YYYY-MM-DD hh:mm:ss<br>" );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.CREATED );
             out.println( "<br>" );
-            out.println( "URL:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", SubredditLogic.URL );
+            out.println( "Points:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.POINTS );
+            out.println( "<br>" );
+            out.println( "subreddit_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.SUBREDDIT_ID );
+            out.println( "<br>" );
+            out.println( "unique_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.UNIQUE_ID);
+            out.println( "<br>" );
+            out.println( "comment_count:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.COMMENT_COUNT );
+            out.println( "<br>" );
+            out.println( "reddit_account_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.REDDIT_ACCOUNT_ID );
             out.println( "<br>" );
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
@@ -129,33 +145,37 @@ public class CreatePost extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
-        if( connectionCount < 3 ){
-            connectionCount++;
+//        if( connectionCount < 3 ){
+//            connectionCount++;
+//            try {
+//                TimeUnit.SECONDS.sleep( 60 );
+//            } catch( InterruptedException ex ) {
+//                Logger.getLogger( CreateSubreddit.class.getName() ).log( Level.SEVERE, null, ex );
+//            }
+//        }
+        PostLogic pLogic = LogicFactory.getFor( "Post" );
+        String uniqueId = request.getParameter( PostLogic.UNIQUE_ID );
+        if( pLogic.getPostWithUniqueId(uniqueId ) == null ){
             try {
-                TimeUnit.SECONDS.sleep( 60 );
-            } catch( InterruptedException ex ) {
-                Logger.getLogger( CreateSubreddit.class.getName() ).log( Level.SEVERE, null, ex );
-            }
-        }
-        SubredditLogic sLogic = LogicFactory.getFor( "Subreddit" );
-        String name = request.getParameter( SubredditLogic.NAME );
-        if( sLogic.getSubredditWithName( name ) == null ){
-            try {
-                Subreddit subreddit = sLogic.createEntity( request.getParameterMap() );
-                sLogic.add( subreddit);
+                Post post = pLogic.createEntity( request.getParameterMap() );
+                //create the two logics for reddit account and subreddit
+                //get the entities from logic using getWithId
+                //set the entities on your post object before adding them to db
+                pLogic.add( post);
             } catch( Exception ex ) {
+                log("",ex);
                 errorMessage = ex.getMessage();
             }
         } else {
             //if duplicate print the error message
-            errorMessage = "Name: \"" + name + "\" already exists";
+            errorMessage = "Post: \"" + uniqueId + "\" already exists";
         }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );
         } else if( request.getParameter( "view" ) != null ){
             //if view button is pressed redirect to the appropriate table
-            response.sendRedirect( "SubredditTable" );
+            response.sendRedirect( "PostTable" );
         }
     }
 
@@ -166,7 +186,7 @@ public class CreatePost extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Create a Subreddit Entity";
+        return "Create a Post Entity";
     }
 
     private static final boolean DEBUG = true;
