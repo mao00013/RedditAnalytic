@@ -1,6 +1,11 @@
-package view;
-
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package view.xie;
 import entity.Account;
+import entity.Subreddit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -13,15 +18,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.AccountLogic;
+import logic.SubredditLogic;
 import logic.LogicFactory;
 
 /**
  *
- * @author Shariar (Shawn) Emami
+ * @author Lu Xie
  */
-@WebServlet( name = "CreateAccount", urlPatterns = { "/CreateAccount" } )
-public class CreateAccount extends HttpServlet {
+@WebServlet( name = "CreateSubreddit", urlPatterns = { "/CreateSubreddit" } )
+public class CreateSubreddit extends HttpServlet {
 
     private String errorMessage = null;
 
@@ -48,17 +53,17 @@ public class CreateAccount extends HttpServlet {
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            out.println( "Displayname:<br>" );
+            out.println( "Subscribers:<br>" );
             //instead of typing the name of column manualy use the static vraiable in logic
             //use the same name as column id of the table. will use this name to get date
             //from parameter map.
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", AccountLogic.DISPLAYNAME );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.SUBSCRIBERS );
             out.println( "<br>" );
-            out.println( "User:<br>" );
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", AccountLogic.USERNAME );
+            out.println( "Name:<br>" );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.NAME );
             out.println( "<br>" );
-            out.println( "Password:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", AccountLogic.PASSWORD );
+            out.println( "URL:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", SubredditLogic.URL );
             out.println( "<br>" );
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
@@ -127,33 +132,26 @@ public class CreateAccount extends HttpServlet {
             throws ServletException, IOException {
         log( "POST" );
         log( "POST: Connection=" + connectionCount );
-//        if( connectionCount < 3 ){
-//            connectionCount++;
-//            try {
-//                TimeUnit.SECONDS.sleep( 60 );
-//            } catch( InterruptedException ex ) {
-//                Logger.getLogger( CreateAccount.class.getName() ).log( Level.SEVERE, null, ex );
-//            }
-//        }
-        AccountLogic aLogic = LogicFactory.getFor( "Account" );
-        String username = request.getParameter( AccountLogic.USERNAME );
-        if( aLogic.getAccountWithUsername( username ) == null ){
+
+        SubredditLogic sLogic = LogicFactory.getFor( "Subreddit" );
+        String name = request.getParameter( SubredditLogic.NAME );
+        if( sLogic.getSubredditWithName( name ) == null ){
             try {
-                Account account = aLogic.createEntity( request.getParameterMap() );
-                aLogic.add( account );
+                Subreddit subreddit = sLogic.createEntity( request.getParameterMap() );
+                sLogic.add( subreddit);
             } catch( Exception ex ) {
                 errorMessage = ex.getMessage();
             }
         } else {
             //if duplicate print the error message
-            errorMessage = "Username: \"" + username + "\" already exists";
+            errorMessage = "Name: \"" + name + "\" already exists";
         }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );
         } else if( request.getParameter( "view" ) != null ){
             //if view button is pressed redirect to the appropriate table
-            response.sendRedirect( "AccountTable" );
+            response.sendRedirect( "SubredditTable" );
         }
     }
 
@@ -164,7 +162,7 @@ public class CreateAccount extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Create a Account Entity";
+        return "Create a Subreddit Entity";
     }
 
     private static final boolean DEBUG = true;
@@ -181,3 +179,4 @@ public class CreateAccount extends HttpServlet {
         getServletContext().log( message, t );
     }
 }
+

@@ -3,7 +3,7 @@
  * @time   3rd Dec 2020
  */
 
-package view;
+package view.leng;
 
 import entity.RedditAccount;
 import java.io.IOException;

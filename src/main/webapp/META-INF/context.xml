@@ -5,5 +5,5 @@
             initialSize="1" logAbandoned="false" maxActive="100" maxIdle="10" 
             maxWaitMillis="20" minIdle="0" name="jdbc/RedditAnalytic" 
             password="8288" removeAbandoned="true" removeAbandonedTimeout="20" 
-            type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/RedditAnalytic?zeroDateTimeBehavior=convertToNull" username="cst8288"/>
+            type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/RedditAnalytic?zeroDateTimeBehavior=convertToNull&amp;useUnicode=true&amp;useJDBCCompliantTimezoneShift=true&amp; useLegacyDatetimeCode=false&amp; serverTimezone=UTC" username="cst8288"/>
 </Context>

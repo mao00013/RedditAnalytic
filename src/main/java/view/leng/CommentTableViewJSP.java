@@ -2,7 +2,7 @@
  * @author XU LENG 
  * @time   4th Dec 2020
  */
-package view;
+package view.leng;
 
 import entity.Comment;
 import java.io.IOException;

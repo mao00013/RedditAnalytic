@@ -12,14 +12,14 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.ObjIntConsumer;
 
-public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
+public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     public static final String SUBSCRIBERS = "subscribers";
     public static final String NAME = "name";
     public static final String URL = "url";
     public static final String ID = "id";
 
-    public SuberdditLogic() {
+    public SubredditLogic() {
         super(new SubredditDAL());
     }
 
@@ -92,7 +92,7 @@ public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
     }
 
     public Subreddit getSubredditWithName(String name) {
-        return get(() -> getSubredditWithName(name));
+        return get(() -> dal().findByName(name));
     }
 
     public Subreddit getSubredditWithUrl(String url) {
@@ -101,7 +101,7 @@ public class SuberdditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     public List<Subreddit> getSubredditsWithSubscribers(int subscribers) {
 
-        return get(() -> getSubredditsWithSubscribers(subscribers));
+        return get(() -> dal().findBySubscribers(subscribers));
     }
 
 }

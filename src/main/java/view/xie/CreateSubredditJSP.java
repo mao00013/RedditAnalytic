@@ -1,8 +1,9 @@
-/**
- * @author XU LENG 
- * @time   4th Dec 2020
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
  */
-package view.leng;
+package view.xie;
 
 import entity.Subreddit;
 import java.io.IOException;
@@ -20,9 +21,13 @@ import javax.servlet.http.HttpServletResponse;
 import logic.LogicFactory;
 import logic.SubredditLogic;
 
-@WebServlet( name = "SubredditTableJSP", urlPatterns = { "/SubredditTableJSP" } )
+/**
+ *
+ * @author Lu Xie
+ */
+  @WebServlet( name = "CreateSubredditJSP", urlPatterns = { "/CreateSubredditJSP" } )
+public class CreateSubredditJSP extends HttpServlet{
 
-public class SubredditTableViewJSP extends HttpServlet{
     private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         String path = req.getServletPath();
@@ -32,7 +37,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         req.setAttribute( "title", path.substring( 1 ) );
         req.getRequestDispatcher( "/jsp/ShowTable-Account.jsp" ).forward( req, resp );
     }
-    
+
     private List<?> extractTableData( HttpServletRequest req ) {
         String search = req.getParameter( "searchText" );
         SubredditLogic logic = LogicFactory.getFor( "Subreddit" );
@@ -49,13 +54,13 @@ public class SubredditTableViewJSP extends HttpServlet{
         }
         return appendDatatoNewList( list, logic::extractDataAsList );
     }
-    
+
     private <T> List<?> appendDatatoNewList( List<T> list, Function<T, List<?>> toArray ) {
         List<List<?>> newlist = new ArrayList<>( list.size() );
         list.forEach( i -> newlist.add( toArray.apply( i ) ) );
         return newlist;
     }
-    
+
     private String toStringMap( Map<String, String[]> m ) {
         StringBuilder builder = new StringBuilder();
         m.keySet().forEach( ( k ) -> {
@@ -66,7 +71,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         } );
         return builder.toString();
     }
-    
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -84,7 +89,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         logic.update( subreddit );
         fillTableData( req, resp );
     }
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -99,7 +104,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         log( "GET" );
         fillTableData( req, resp );
     }
-    
+
     /**
      * Handles the HTTP <code>PUT</code> method.
      *
@@ -114,8 +119,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         log( "PUT" );
         doPost( req, resp );
     }
-    
-    
+
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -130,7 +134,7 @@ public class SubredditTableViewJSP extends HttpServlet{
         log( "DELETE" );
         doPost( req, resp );
     }
-    
+
     /**
      * Returns a short description of the servlet.
      *
@@ -138,7 +142,7 @@ public class SubredditTableViewJSP extends HttpServlet{
      */
     @Override
     public String getServletInfo() {
-        return "Smaple of Account Table using JSP";
+        return " Create Subreddit Table using JSP";
     }
 
     private static final boolean DEBUG = true;
