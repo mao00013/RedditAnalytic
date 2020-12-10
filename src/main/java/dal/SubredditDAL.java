@@ -37,4 +37,10 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
         map.put("subscribers", subscribers);
         return findResults("Subreddit.findBySubscribers", map);
     }
+
+    public Subreddit findByName(String name) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", name);
+        return findResult("Subreddit.findByName", map);
+    }
 }
