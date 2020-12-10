@@ -15,6 +15,7 @@ import java.util.function.IntFunction;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SubredditLogicTest {
+
     private SubredditLogic subredditLogic;
     private Subreddit expectedSubreddit;
 
@@ -31,8 +32,9 @@ class SubredditLogicTest {
     @BeforeEach
     final void setUp() {
         subredditLogic = LogicFactory.getFor("Subreddit");
-        for (Subreddit subreddit : subredditLogic.getAll())
-            subredditLogic.delete(subreddit);
+//        for (Subreddit subreddit : subredditLogic.getAll()) {
+//            subredditLogic.delete(subreddit);
+//        }
         EntityManager em = EMFactory.getEMF().createEntityManager();
         Subreddit subreddit = new Subreddit();
         subreddit.setUrl("http://test.com");
@@ -68,7 +70,8 @@ class SubredditLogicTest {
     final void testExtractDataAsList() {
         List<?> list = subredditLogic.extractDataAsList(expectedSubreddit);
         assertEquals(expectedSubreddit.getId(), list.get(0));
-        assertEquals(expectedSubreddit.getSubscribers(), list.get(1));                 assertEquals(expectedSubreddit.getName(), list.get(2));
+        assertEquals(expectedSubreddit.getSubscribers(), list.get(1));
+        assertEquals(expectedSubreddit.getName(), list.get(2));
         assertEquals(expectedSubreddit.getUrl(), list.get(3));
 
     }
@@ -83,7 +86,6 @@ class SubredditLogicTest {
         Subreddit returnedSubreddit = subredditLogic.createEntity(sampleMap);
         assertSubredditEquals(expectedSubreddit, returnedSubreddit);
     }
-
 
     @Test
     final void testCreateEntityAndAdd() {
@@ -125,7 +127,7 @@ class SubredditLogicTest {
         fillMap.accept(sampleMap);
         sampleMap.replace(SubredditLogic.SUBSCRIBERS, null);
         assertThrows(NullPointerException.class, () -> subredditLogic.createEntity(sampleMap));
-        sampleMap.replace(SubredditLogic.SUBSCRIBERS,new String[]{});
+        sampleMap.replace(SubredditLogic.SUBSCRIBERS, new String[]{});
         assertThrows(IndexOutOfBoundsException.class, () -> subredditLogic.createEntity(sampleMap));
 
         fillMap.accept(sampleMap);
@@ -188,7 +190,7 @@ class SubredditLogicTest {
         sampleMap.put(SubredditLogic.SUBSCRIBERS, new String[]{Integer.toString(1)});
 
         Subreddit returnedSubreddit = subredditLogic.createEntity(sampleMap);
-        assertEquals(Integer.parseInt(sampleMap.get(SubredditLogic.ID) [0]), returnedSubreddit.getId());
+        assertEquals(Integer.parseInt(sampleMap.get(SubredditLogic.ID)[0]), returnedSubreddit.getId());
         assertEquals(sampleMap.get(SubredditLogic.NAME)[0], returnedSubreddit.getName());
         assertEquals(sampleMap.get(SubredditLogic.URL)[0], returnedSubreddit.getUrl());
         assertEquals(Integer.parseInt(sampleMap.get(SubredditLogic.SUBSCRIBERS)[0]), returnedSubreddit.getSubscribers());
@@ -202,17 +204,18 @@ class SubredditLogicTest {
         returnedSubreddit = subredditLogic.createEntity(sampleMap);
         assertEquals(Integer.parseInt(sampleMap.get(SubredditLogic.ID)[0]), returnedSubreddit.getId());
         assertEquals(sampleMap.get(SubredditLogic.NAME)[0], returnedSubreddit.getName());
-        assertEquals(sampleMap.get(SubredditLogic.URL) [0], returnedSubreddit.getUrl());
+        assertEquals(sampleMap.get(SubredditLogic.URL)[0], returnedSubreddit.getUrl());
         assertEquals(Integer.parseInt(sampleMap.get(SubredditLogic.SUBSCRIBERS)[0]), returnedSubreddit.getSubscribers());
     }
 
-    private void assertSubredditEquals(Subreddit expected, Subreddit actual ) {
+    private void assertSubredditEquals(Subreddit expected, Subreddit actual) {
         //assert all field to guarantee they are the same
-        assertEquals( expected.getId(), actual.getId() );
-        assertEquals( expected.getName(), actual.getName() );
-        assertEquals( expected.getUrl(), actual.getUrl());
-        assertEquals( expected.getSubscribers(), actual.getSubscribers() );
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getName(), actual.getName());
+        assertEquals(expected.getUrl(), actual.getUrl());
+        assertEquals(expected.getSubscribers(), actual.getSubscribers());
     }
+
     @Test
     final void testGetAll() {
         List<Subreddit> list = subredditLogic.getAll();
@@ -220,7 +223,7 @@ class SubredditLogicTest {
         assertNotNull(expectedSubreddit);
         subredditLogic.delete(expectedSubreddit);
         list = subredditLogic.getAll();
-        assertEquals(originalSize -1, list.size());
+        assertEquals(originalSize - 1, list.size());
     }
 
     @Test
@@ -245,8 +248,8 @@ class SubredditLogicTest {
     final void getSubredditsWithSubscribers() {
         List<Subreddit> returnedSubreddit = subredditLogic.getSubredditsWithSubscribers(expectedSubreddit.getSubscribers());
         Subreddit subreddit = returnedSubreddit.get(0);
-       if(subreddit.getId().equals(expectedSubreddit.getId())) {
-           assertSubredditEquals(expectedSubreddit, subreddit);
-       }
+        if (subreddit.getId().equals(expectedSubreddit.getId())) {
+            assertSubredditEquals(expectedSubreddit, subreddit);
+        }
     }
 }

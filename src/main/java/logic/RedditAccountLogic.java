@@ -93,7 +93,7 @@ public class RedditAccountLogic extends GenericLogic<RedditAccount, RedditAccoun
         entity.setName(name);
         entity.setLinkPoints(Integer.parseInt(link_points));
         entity.setCommentPoints(Integer.parseInt(comment_points));
-        entity.setCreated(new Date(created));
+        entity.setCreated(convertStringToDate(created));
         return entity;
 
     }

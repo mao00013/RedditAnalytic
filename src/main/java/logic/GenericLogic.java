@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  */
 abstract class GenericLogic< E, T extends DataAccessLayer<E>> implements Logic<E> {
 
-    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat( "yyyy-MM-dd hh:mm:ss" );
+    private static final SimpleDateFormat FORMATTER = new SimpleDateFormat( "yyyy-MM-dd kk:mm:ss" );
 
     private final T DAL;
 

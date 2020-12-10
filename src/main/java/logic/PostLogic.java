@@ -63,8 +63,8 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
 
         Post entity = new Post();
-        RedditAccount ra = new RedditAccount();
-        Subreddit s = new Subreddit();
+//        RedditAccount ra = new RedditAccount();
+//        Subreddit s = new Subreddit();
         if (parameterMap.containsKey(ID)) {
             try {
                 entity.setId(Integer.parseInt(parameterMap.get(ID)[0]));
@@ -85,8 +85,8 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
                 throw new ValidationException(error);
             }
         };
-        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
-        String subreddit_id = parameterMap.get(SUBREDDIT_ID)[0];
+//        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
+//        String subreddit_id = parameterMap.get(SUBREDDIT_ID)[0];
         String uniqueid = parameterMap.get(UNIQUE_ID)[0];
         String points = parameterMap.get(POINTS)[0];
         String comment_count = parameterMap.get(COMMENT_COUNT)[0];
@@ -96,18 +96,18 @@ public class PostLogic extends GenericLogic<Post, PostDAL> {
         //validate the data
         validator.accept(uniqueid, 10);
         validator.accept(title, 255);
-        ra.setId(Integer.parseInt(reddit_account_id));
-        s.setId(Integer.parseInt(subreddit_id));
+//        ra.setId(Integer.parseInt(reddit_account_id));
+//        s.setId(Integer.parseInt(subreddit_id));
 
 
         //set values on entity
-        entity.setRedditAccountId(ra);
-        entity.setSubredditId(s);
+//        entity.setRedditAccountId(ra);
+//        entity.setSubredditId(s);
         entity.setUniqueId(uniqueid);
         entity.setTitle(title);
         entity.setPoints(Integer.parseInt(points));
         entity.setCommentCount(Integer.parseInt(comment_count));
-        entity.setCreated(new Date(created));
+        entity.setCreated(convertStringToDate(created));
         return entity;
     }
     /**

@@ -66,8 +66,8 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
         Objects.requireNonNull(parameterMap, "parameterMap cannot be null");
 
         Comment entity = new Comment();
-        RedditAccount ra = new RedditAccount();
-        Post post = new Post();
+//        RedditAccount ra = new RedditAccount();
+//        Post post = new Post();
         if (parameterMap.containsKey(ID)) {
             try {
                 entity.setId(Integer.parseInt(parameterMap.get(ID)[0]));
@@ -88,8 +88,8 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
                 throw new ValidationException(error);
             }
         };
-        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
-        String post_id = parameterMap.get(POST_ID)[0];
+//        String reddit_account_id = parameterMap.get(REDDIT_ACCOUNT_ID)[0];
+//        String post_id = parameterMap.get(POST_ID)[0];
         String uniqueid = parameterMap.get(UNIQUEID)[0];
         String points = parameterMap.get(POINTS)[0];
         String text = parameterMap.get(TEXT)[0];
@@ -101,14 +101,14 @@ public class CommentLogic extends GenericLogic<Comment, CommentDAL> {
         validator.accept(uniqueid, 10);
         validator.accept(text, 10000);
         validator.accept(is_reply, 1);
-        ra.setId(Integer.parseInt(reddit_account_id));
-        post.setId(Integer.parseInt(post_id));
+//        ra.setId(Integer.parseInt(reddit_account_id));
+//        post.setId(Integer.parseInt(post_id));
 
 
         //set values on entity
-        entity.setRedditAccountId(ra);
-        entity.setPostId(post);
-        entity.setCreated(new Date(created));
+//        entity.setRedditAccountId(ra);
+//        entity.setPostId(post);
+        entity.setCreated(convertStringToDate(created));
         entity.setUniqueId(uniqueid);
         entity.setText(text);
         entity.setPoints(Integer.parseInt(points));

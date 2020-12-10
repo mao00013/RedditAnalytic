@@ -1,6 +1,5 @@
 package dal;
 
-import entity.Comment;
 import entity.Subreddit;
 
 import java.util.HashMap;
@@ -14,7 +13,6 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
     }
 
     /**
-     *  find all entity
      * @return list of all entity
      */
     @Override
@@ -40,7 +38,6 @@ public class SubredditDAL extends GenericDAL<Subreddit> {
      * @return entity
      */
     public Subreddit findByName(String name) {
-
         Map<String, Object> map = new HashMap<>();
         map.put("name", name);
         return findResult("Subreddit.findByName", map);

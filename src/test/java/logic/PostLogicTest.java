@@ -38,12 +38,12 @@ class PostLogicTest {
         postLogic = LogicFactory.getFor("Post");
         subredditLogic = LogicFactory.getFor("Subreddit");
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
-        for(Post post: postLogic.getAll())
-            postLogic.delete(post);
-        for(Subreddit subreddit: subredditLogic.getAll())
-            subredditLogic.delete(subreddit);
-        for(RedditAccount redditAccount: redditAccountLogic.getAll())
-            redditAccountLogic.delete(redditAccount);
+//        for(Post post: postLogic.getAll())
+//            postLogic.delete(post);
+//        for(Subreddit subreddit: subredditLogic.getAll())
+//            subredditLogic.delete(subreddit);
+//        for(RedditAccount redditAccount: redditAccountLogic.getAll())
+//            redditAccountLogic.delete(redditAccount);
 
         // create RedditAccount entity
         RedditAccount entity = new RedditAccount();

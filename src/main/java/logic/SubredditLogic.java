@@ -23,13 +23,11 @@ public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
         super(new SubredditDAL());
     }
 
-
     /**
      * getColumnNames
      *
      * @return columName list
      */
-
     @Override
     public List<String> getColumnNames() {
         return Arrays.asList("ID", "subscribers", "name", "url");
@@ -105,7 +103,6 @@ public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
 
     }
 
-
     /**
      * get all entity
      *
@@ -125,20 +122,6 @@ public class SubredditLogic extends GenericLogic<Subreddit, SubredditDAL> {
     public Subreddit getWithId(int id) {
         return get(() -> dal().findById(id));
     }
-//
-//    public Subreddit getSubredditWithName(String name) {
-//        return get(() -> dal().findByName(name));
-//    }
-//
-//    public Subreddit getSubredditWithUrl(String url) {
-//        return get(() ->  dal().findByUrl(url));
-//    }
-//
-//    public List<Subreddit> getSubredditsWithSubscribers(int subscribers) {
-//
-//        return get(() -> dal().findBySubscribers(subscribers));
-//    }
-
 
     /**
      *  get entity with name

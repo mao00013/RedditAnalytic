@@ -31,13 +31,13 @@ class RedditAccountLogicTest {
     final void setUp() {
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
 
-        for(RedditAccount redditAccount: redditAccountLogic.getAll())
-            redditAccountLogic.delete(redditAccount);
+//        for(RedditAccount redditAccount: redditAccountLogic.getAll())
+//            redditAccountLogic.delete(redditAccount);
         RedditAccount entity = new RedditAccount();
         entity.setName("test");
         entity.setLinkPoints(1);
         entity.setCommentPoints(1);
-        entity.setCreated(new Date(2020, 12, 3));
+        entity.setCreated(new Date());
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
         em.getTransaction().begin();

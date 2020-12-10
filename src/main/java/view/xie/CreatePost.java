@@ -1,6 +1,12 @@
-package view;
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package view.xie;
 
-import entity.Account;
+import entity.Post;
+import entity.Subreddit;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Arrays;
@@ -13,17 +19,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import logic.AccountLogic;
 import logic.LogicFactory;
+import logic.PostLogic;
+import logic.SubredditLogic;
 
 /**
  *
- * @author Shariar (Shawn) Emami
+ * @author Lu
  */
-@WebServlet( name = "CreateAccount", urlPatterns = { "/CreateAccount" } )
-public class CreateAccount extends HttpServlet {
-
-    private String errorMessage = null;
+@WebServlet( name = "CreatePost", urlPatterns = { "/CreatePost" } )
+public class CreatePost extends HttpServlet {
+      private String errorMessage = null;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
@@ -42,23 +48,35 @@ public class CreateAccount extends HttpServlet {
             out.println( "<!DOCTYPE html>" );
             out.println( "<html>" );
             out.println( "<head>" );
-            out.println( "<title>Create Account</title>" );
+            out.println( "<title>Create Post</title>" );
             out.println( "</head>" );
             out.println( "<body>" );
             out.println( "<div style=\"text-align: center;\">" );
             out.println( "<div style=\"display: inline-block; text-align: left;\">" );
             out.println( "<form method=\"post\">" );
-            out.println( "Displayname:<br>" );
+            out.println( "Title:<br>" );
             //instead of typing the name of column manualy use the static vraiable in logic
             //use the same name as column id of the table. will use this name to get date
             //from parameter map.
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", AccountLogic.DISPLAYNAME );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.TITLE );
             out.println( "<br>" );
-            out.println( "User:<br>" );
-            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", AccountLogic.USERNAME );
+            out.println( "Created:YYYY-MM-DD hh:mm:ss<br>" );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.CREATED );
             out.println( "<br>" );
-            out.println( "Password:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", AccountLogic.PASSWORD );
+            out.println( "Points:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.POINTS );
+            out.println( "<br>" );
+            out.println( "subreddit_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.SUBREDDIT_ID );
+            out.println( "<br>" );
+            out.println( "unique_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.UNIQUE_ID);
+            out.println( "<br>" );
+            out.println( "comment_count:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.COMMENT_COUNT );
+            out.println( "<br>" );
+            out.println( "reddit_account_id:<br>" );
+            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.REDDIT_ACCOUNT_ID );
             out.println( "<br>" );
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
@@ -132,28 +150,32 @@ public class CreateAccount extends HttpServlet {
 //            try {
 //                TimeUnit.SECONDS.sleep( 60 );
 //            } catch( InterruptedException ex ) {
-//                Logger.getLogger( CreateAccount.class.getName() ).log( Level.SEVERE, null, ex );
+//                Logger.getLogger( CreateSubreddit.class.getName() ).log( Level.SEVERE, null, ex );
 //            }
 //        }
-        AccountLogic aLogic = LogicFactory.getFor( "Account" );
-        String username = request.getParameter( AccountLogic.USERNAME );
-        if( aLogic.getAccountWithUsername( username ) == null ){
+        PostLogic pLogic = LogicFactory.getFor( "Post" );
+        String uniqueId = request.getParameter( PostLogic.UNIQUE_ID );
+        if( pLogic.getPostWithUniqueId(uniqueId ) == null ){
             try {
-                Account account = aLogic.createEntity( request.getParameterMap() );
-                aLogic.add( account );
+                Post post = pLogic.createEntity( request.getParameterMap() );
+                //create the two logics for reddit account and subreddit
+                //get the entities from logic using getWithId
+                //set the entities on your post object before adding them to db
+                pLogic.add( post);
             } catch( Exception ex ) {
+                log("",ex);
                 errorMessage = ex.getMessage();
             }
         } else {
             //if duplicate print the error message
-            errorMessage = "Username: \"" + username + "\" already exists";
+            errorMessage = "Post: \"" + uniqueId + "\" already exists";
         }
         if( request.getParameter( "add" ) != null ){
             //if add button is pressed return the same page
             processRequest( request, response );
         } else if( request.getParameter( "view" ) != null ){
             //if view button is pressed redirect to the appropriate table
-            response.sendRedirect( "AccountTable" );
+            response.sendRedirect( "PostTable" );
         }
     }
 
@@ -164,7 +186,7 @@ public class CreateAccount extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Create a Account Entity";
+        return "Create a Post Entity";
     }
 
     private static final boolean DEBUG = true;
