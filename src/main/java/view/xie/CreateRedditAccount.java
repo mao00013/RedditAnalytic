@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.LogicFactory;
+import logic.PostLogic;
 import logic.RedditAccountLogic;
 import logic.SubredditLogic;
 
@@ -55,6 +56,7 @@ public class CreateRedditAccount extends HttpServlet{
             //instead of typing the name of column manualy use the static vraiable in logic
             //use the same name as column id of the table. will use this name to get date
             //from parameter map.
+            
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", RedditAccountLogic.NAME );
             out.println( "<br>" );
             out.println( "link_points:<br>" );
@@ -139,6 +141,11 @@ public class CreateRedditAccount extends HttpServlet{
         if( raLogic.getRedditAccountWithName(name ) == null ){
             try {
                 RedditAccount redditAccount = raLogic.createEntity( request.getParameterMap() );
+                
+//                PostLogic postLogic = LogicFactory.getFor("Post");
+//                RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
+//                redditAccount.setPostId(postLogic.getWithId(connectionCount));
+//                redditAccount.setRedditAccountId(redditAccountLogic.getWithId(connectionCount));
                 raLogic.add( redditAccount);
             } catch( Exception ex ) {
                 log("",ex);

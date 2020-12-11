@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -63,7 +63,7 @@ public class CreateSubreddit extends HttpServlet {
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.NAME );
             out.println( "<br>" );
             out.println( "URL:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", SubredditLogic.URL );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", SubredditLogic.URL );
             out.println( "<br>" );
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );

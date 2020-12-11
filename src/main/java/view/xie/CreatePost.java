@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.LogicFactory;
 import logic.PostLogic;
+import logic.RedditAccountLogic;
 import logic.SubredditLogic;
+import static view.xie.CreateComment.connectionCount;
 
 /**
  *
@@ -64,19 +66,19 @@ public class CreatePost extends HttpServlet {
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.CREATED );
             out.println( "<br>" );
             out.println( "Points:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.POINTS );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.POINTS );
             out.println( "<br>" );
             out.println( "subreddit_id:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.SUBREDDIT_ID );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.SUBREDDIT_ID );
             out.println( "<br>" );
             out.println( "unique_id:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.UNIQUE_ID);
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.UNIQUE_ID);
             out.println( "<br>" );
             out.println( "comment_count:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.COMMENT_COUNT );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.COMMENT_COUNT );
             out.println( "<br>" );
             out.println( "reddit_account_id:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", PostLogic.REDDIT_ACCOUNT_ID );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", PostLogic.REDDIT_ACCOUNT_ID );
             out.println( "<br>" );
             out.println( "<input type=\"submit\" name=\"view\" value=\"Add and View\">" );
             out.println( "<input type=\"submit\" name=\"add\" value=\"Add\">" );
@@ -161,6 +163,10 @@ public class CreatePost extends HttpServlet {
                 //create the two logics for reddit account and subreddit
                 //get the entities from logic using getWithId
                 //set the entities on your post object before adding them to db
+                SubredditLogic subredditLogic = LogicFactory.getFor("Subreddit");
+                RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
+                post.setSubredditId(subredditLogic.getWithId(1));
+                post.setRedditAccountId(redditAccountLogic.getWithId(1));
                 pLogic.add( post);
             } catch( Exception ex ) {
                 log("",ex);
