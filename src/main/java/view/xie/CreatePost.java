@@ -21,7 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.LogicFactory;
 import logic.PostLogic;
+import logic.RedditAccountLogic;
 import logic.SubredditLogic;
+import static view.xie.CreateComment.connectionCount;
 
 /**
  *
@@ -161,6 +163,10 @@ public class CreatePost extends HttpServlet {
                 //create the two logics for reddit account and subreddit
                 //get the entities from logic using getWithId
                 //set the entities on your post object before adding them to db
+                SubredditLogic subredditLogic = LogicFactory.getFor("Subreddit");
+                RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
+                post.setSubredditId(subredditLogic.getWithId(connectionCount));
+                post.setRedditAccountId(redditAccountLogic.getWithId(connectionCount));
                 pLogic.add( post);
             } catch( Exception ex ) {
                 log("",ex);

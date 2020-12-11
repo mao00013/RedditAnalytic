@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import logic.CommentLogic;
 import logic.LogicFactory;
+import logic.PostLogic;
+import logic.RedditAccountLogic;
 
 /**
  *
@@ -161,7 +163,12 @@ public class CreateComment extends HttpServlet {
                 //create the two logics for post and reddit account
                 //get the entities from logic using getWithId
                 //set the entities on your comment object before adding comment to db
-                cLogic.add( comment );
+            
+                PostLogic postLogic = LogicFactory.getFor("Post");
+                RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
+                comment.setPostId(postLogic.getWithId(connectionCount));
+                comment.setRedditAccountId(redditAccountLogic.getWithId(connectionCount));
+               cLogic.add( comment );
             } catch( Exception ex ) {
                 log("",ex);
                 errorMessage = ex.getMessage();
