@@ -63,7 +63,7 @@ public class CreateComment extends HttpServlet {
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", CommentLogic.CREATED );
             out.println( "<br>" );
             out.println( "Points:<br>" );
-            out.printf( "<input type=\"password\" name=\"%s\" value=\"\"><br>", CommentLogic.POINTS );
+            out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", CommentLogic.POINTS );
             out.println( "<br>" );
             out.println( "Replys:<br>" );
             out.printf( "<input type=\"text\" name=\"%s\" value=\"\"><br>", CommentLogic.REPLYS );
@@ -166,8 +166,8 @@ public class CreateComment extends HttpServlet {
             
                 PostLogic postLogic = LogicFactory.getFor("Post");
                 RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
-                comment.setPostId(postLogic.getWithId(connectionCount));
-                comment.setRedditAccountId(redditAccountLogic.getWithId(connectionCount));
+                comment.setPostId(postLogic.getWithId(1));
+                comment.setRedditAccountId(redditAccountLogic.getWithId(1));
                cLogic.add( comment );
             } catch( Exception ex ) {
                 log("",ex);
