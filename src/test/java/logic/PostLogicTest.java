@@ -50,7 +50,7 @@ class PostLogicTest {
         entity.setName("test");
         entity.setLinkPoints(1);
         entity.setCommentPoints(1);
-        entity.setCreated(new Date(2020, 12, 3));
+        entity.setCreated(redditAccountLogic.convertStringToDate("2020-12-03 12:12:12"));
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
         em.getTransaction().begin();
@@ -72,7 +72,7 @@ class PostLogicTest {
         // create Post entity
         Post post = new Post();
         post.setTitle("post");
-        post.setCreated(new Date(2020, 12, 1));
+        post.setCreated(redditAccountLogic.convertStringToDate("2020-12-03 12:12:12"));
         post.setPoints(2);
         post.setUniqueId("post");
         post.setCommentCount(2);

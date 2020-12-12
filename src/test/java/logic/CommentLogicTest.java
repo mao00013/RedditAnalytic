@@ -57,7 +57,7 @@ class CommentLogicTest {
         entity.setName("test");
         entity.setLinkPoints(1);
         entity.setCommentPoints(1);
-        entity.setCreated(new Date(2020, 12, 3));
+        entity.setCreated(redditAccountLogic.convertStringToDate("2020-12-03 12:12:12"));
         //get an instance of EntityManager
         EntityManager em = EMFactory.getEMF().createEntityManager();
         em.getTransaction().begin();
@@ -82,7 +82,7 @@ class CommentLogicTest {
         post.setPoints(2);
         post.setCommentCount(2);
         post.setTitle("post_title");
-        post.setCreated(new Date(2020, 12, 1));
+        post.setCreated(postLogic.convertStringToDate("2020-12-03 12:12:12"));
         post.setSubredditId(expectedSubreddit);
         post.setRedditAccountId(expectedRedditAccount);
         em = EMFactory.getEMF().createEntityManager();
@@ -93,7 +93,7 @@ class CommentLogicTest {
 
         // create Comment entity
         Comment comment = new Comment();
-        comment.setCreated(new Date(2020, 12, 2));
+        comment.setCreated(commentLogic.convertStringToDate("2020-12-03 12:12:12"));
         comment.setIsReply(true);
         comment.setPoints(9);
         comment.setPostId(expectedPost);
