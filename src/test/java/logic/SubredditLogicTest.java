@@ -32,15 +32,11 @@ class SubredditLogicTest {
     @BeforeEach
     final void setUp() {
         subredditLogic = LogicFactory.getFor("Subreddit");
-//        for (Subreddit subreddit : subredditLogic.getAll()) {
-//            subredditLogic.delete(subreddit);
-//        }
         EntityManager em = EMFactory.getEMF().createEntityManager();
         Subreddit subreddit = new Subreddit();
         subreddit.setUrl("http://test.com");
         subreddit.setName("subreddit");
         subreddit.setSubscribers(100);
-        em = EMFactory.getEMF().createEntityManager();
         em.getTransaction().begin();
         expectedSubreddit = em.merge(subreddit);
         em.getTransaction().commit();
