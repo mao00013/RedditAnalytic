@@ -19,6 +19,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.CommentLogic;
 import logic.LogicFactory;
 import logic.PostLogic;
 import logic.RedditAccountLogic;
@@ -165,8 +166,8 @@ public class CreatePost extends HttpServlet {
                 //set the entities on your post object before adding them to db
                 SubredditLogic subredditLogic = LogicFactory.getFor("Subreddit");
                 RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
-                post.setSubredditId(subredditLogic.getWithId(1));
-                post.setRedditAccountId(redditAccountLogic.getWithId(1));
+                post.setSubredditId(subredditLogic.getWithId(Integer.valueOf(request.getParameter(PostLogic.SUBREDDIT_ID))));
+                post.setRedditAccountId(redditAccountLogic.getWithId(Integer.valueOf(request.getParameter(PostLogic.REDDIT_ACCOUNT_ID))));
                 pLogic.add( post);
             } catch( Exception ex ) {
                 log("",ex);
