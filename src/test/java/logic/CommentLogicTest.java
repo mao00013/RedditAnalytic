@@ -42,15 +42,15 @@ class CommentLogicTest {
         subredditLogic = LogicFactory.getFor("Subreddit");
         redditAccountLogic = LogicFactory.getFor("RedditAccount");
 
-        // clean up
-        for(Comment comment : commentLogic.getAll())
-            commentLogic.delete(comment);
-        for(Post post: postLogic.getAll())
-            postLogic.delete(post);
-        for(Subreddit subreddit: subredditLogic.getAll())
-            subredditLogic.delete(subreddit);
-        for(RedditAccount redditAccount: redditAccountLogic.getAll())
-            redditAccountLogic.delete(redditAccount);
+//        // clean up
+//        for(Comment comment : commentLogic.getAll())
+//            commentLogic.delete(comment);
+//        for(Post post: postLogic.getAll())
+//            postLogic.delete(post);
+//        for(Subreddit subreddit: subredditLogic.getAll())
+//            subredditLogic.delete(subreddit);
+//        for(RedditAccount redditAccount: redditAccountLogic.getAll())
+//            redditAccountLogic.delete(redditAccount);
 
         // create RedditAccount entity
         RedditAccount entity = new RedditAccount();
