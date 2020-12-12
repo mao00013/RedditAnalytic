@@ -1,11 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package view.xie;
+package view.leng;
 
-import entity.RedditAccount;
+import view.*;
+import entity.Account;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,16 +14,17 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import logic.AccountLogic;
 import logic.LogicFactory;
-import logic.RedditAccountLogic;
 
 /**
  *
- * @author Lu
+ * @author Shariar (Shawn) Emami
  */
-@WebServlet( name = "CreateRedditAccountJSP", urlPatterns = { "/CreateRedditAccountJSP" } )
-public class CreateRedditAccountJSP  extends HttpServlet{
-     private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
+@WebServlet( name = "AccountTablJSP", urlPatterns = { "/AccountTableJSP" } )
+public class AccountTablViewJSP extends HttpServlet {
+
+    private void fillTableData( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         String path = req.getServletPath();
         req.setAttribute( "entities", extractTableData( req ) );
@@ -36,13 +33,13 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         req.setAttribute( "title", path.substring( 1 ) );
         req.getRequestDispatcher( "/jsp/ShowTable-Account.jsp" ).forward( req, resp );
     }
-    
+
     private List<?> extractTableData( HttpServletRequest req ) {
         String search = req.getParameter( "searchText" );
-        RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
+        AccountLogic logic = LogicFactory.getFor( "Account" );
         req.setAttribute( "columnName", logic.getColumnNames() );
         req.setAttribute( "columnCode", logic.getColumnCodes() );
-        List<RedditAccount> list;
+        List<Account> list;
         if( search != null ){
             list = logic.search( search );
         } else {
@@ -53,13 +50,13 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         }
         return appendDatatoNewList( list, logic::extractDataAsList );
     }
-    
+
     private <T> List<?> appendDatatoNewList( List<T> list, Function<T, List<?>> toArray ) {
         List<List<?>> newlist = new ArrayList<>( list.size() );
         list.forEach( i -> newlist.add( toArray.apply( i ) ) );
         return newlist;
     }
-    
+
     private String toStringMap( Map<String, String[]> m ) {
         StringBuilder builder = new StringBuilder();
         m.keySet().forEach( ( k ) -> {
@@ -70,8 +67,7 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         } );
         return builder.toString();
     }
-    
-    
+
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -84,13 +80,12 @@ public class CreateRedditAccountJSP  extends HttpServlet{
     protected void doPost( HttpServletRequest req, HttpServletResponse resp )
             throws ServletException, IOException {
         log( "POST" );
-        RedditAccountLogic logic = LogicFactory.getFor( "RedditAccount" );
-        RedditAccount account = logic.updateEntity( req.getParameterMap() );
+        AccountLogic logic = LogicFactory.getFor( "Account" );
+        Account account = logic.updateEntity( req.getParameterMap() );
         logic.update( account );
         fillTableData( req, resp );
     }
-    
-    
+
     /**
      * Handles the HTTP <code>GET</code> method.
      *
@@ -105,8 +100,7 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         log( "GET" );
         fillTableData( req, resp );
     }
-    
-    
+
     /**
      * Handles the HTTP <code>PUT</code> method.
      *
@@ -121,8 +115,7 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         log( "PUT" );
         doPost( req, resp );
     }
-    
-    
+
     /**
      * Handles the HTTP <code>DELETE</code> method.
      *
@@ -137,7 +130,7 @@ public class CreateRedditAccountJSP  extends HttpServlet{
         log( "DELETE" );
         doPost( req, resp );
     }
-    
+
     /**
      * Returns a short description of the servlet.
      *

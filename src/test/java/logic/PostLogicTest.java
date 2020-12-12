@@ -135,6 +135,7 @@ class PostLogicTest {
         sampleMap.put(PostLogic.COMMENT_COUNT, new String[] {Integer.toString(expectedPost.getCommentCount())});
         sampleMap.put(PostLogic.REDDIT_ACCOUNT_ID, new String[] {expectedPost.getRedditAccountId().getId().toString()});
         Post returnedPost = postLogic.createEntity(sampleMap);
+   
         assertPostEquals(expectedPost, returnedPost);
 
     }

@@ -183,7 +183,7 @@ class CommentLogicTest {
         sampleMap.put(CommentLogic.UNIQUEID, new String[]{"uid"});
 //        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
 //        sampleMap.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
-        sampleMap.put(CommentLogic.CREATED, new String[]{expectedComment.getCreated().toString()});
+        sampleMap.put(CommentLogic.CREATED, new String[]{commentLogic.convertDateToString(expectedComment.getCreated())});
         Comment returnedCommet = commentLogic.createEntity(sampleMap);
         //you have to add the depdendencies
         returnedCommet.setPostId(postLogic.getWithId(1));
@@ -206,7 +206,7 @@ class CommentLogicTest {
             map.put(CommentLogic.POINTS, new String[]{Integer.toString(expectedComment.getPoints())});
             map.put(CommentLogic.UNIQUEID, new String[]{expectedComment.getUniqueId()});
             map.put(CommentLogic.ISREPLY, new String[]{expectedComment.getIsReply() ? "1" : "0"});
-            map.put(CommentLogic.CREATED, new String[]{expectedComment.getCreated().toString()});
+            map.put(CommentLogic.CREATED, new String[]{commentLogic.convertDateToString(expectedComment.getCreated())});
             map.put(CommentLogic.REPLYS, new String[]{Integer.toString(expectedComment.getReplys())});
 //            map.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
 //            map.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
@@ -277,7 +277,7 @@ class CommentLogicTest {
             map.put(CommentLogic.POINTS, new String[]{Integer.toString(expectedComment.getPoints())});
             map.put(CommentLogic.UNIQUEID, new String[]{expectedComment.getUniqueId()});
             map.put(CommentLogic.ISREPLY, new String[]{expectedComment.getIsReply() ? "1" : "0"});
-            map.put(CommentLogic.CREATED, new String[]{expectedComment.getCreated().toString()});
+            map.put(CommentLogic.CREATED, new String[]{commentLogic.convertDateToString(expectedComment.getCreated())});
             map.put(CommentLogic.REPLYS, new String[]{Integer.toString(expectedComment.getReplys())});
             map.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
             map.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
@@ -349,7 +349,7 @@ class CommentLogicTest {
         sampleMap.put(CommentLogic.REPLYS, new String[]{Integer.toString(1)});
 //        sampleMap.put(CommentLogic.POST_ID, new String[]{expectedComment.getPostId().getId().toString()});
 //        sampleMap.put(CommentLogic.REDDIT_ACCOUNT_ID, new String[]{expectedComment.getRedditAccountId().getId().toString()});
-        sampleMap.put(CommentLogic.CREATED, new String[]{(expectedComment.getCreated().toString())});
+        sampleMap.put(CommentLogic.CREATED, new String[]{commentLogic.convertDateToString(expectedComment.getCreated())});
         sampleMap.put(CommentLogic.POINTS, new String[]{Integer.toString(1)});
 
         returnedComment = commentLogic.createEntity(sampleMap);

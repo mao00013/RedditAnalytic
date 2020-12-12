@@ -166,8 +166,8 @@ public class CreateComment extends HttpServlet {
             
                 PostLogic postLogic = LogicFactory.getFor("Post");
                 RedditAccountLogic redditAccountLogic = LogicFactory.getFor("RedditAccount");
-                comment.setPostId(postLogic.getWithId(1));
-                comment.setRedditAccountId(redditAccountLogic.getWithId(1));
+                comment.setPostId(postLogic.getWithId(Integer.valueOf(request.getParameter(CommentLogic.POST_ID))));
+                comment.setRedditAccountId(redditAccountLogic.getWithId(Integer.valueOf(request.getParameter(CommentLogic.REDDIT_ACCOUNT_ID))));
                cLogic.add( comment );
             } catch( Exception ex ) {
                 log("",ex);
